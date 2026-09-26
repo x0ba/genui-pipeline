@@ -8,6 +8,7 @@ import { getAtlasEntry, searchAtlas } from "../atlas";
 import { emit } from "../events";
 import { addGenerated, COMPONENT_DIR, getLibrary, getSpec, ROOT, saveSpec, STAGING_DIR } from "../store";
 import { checkComponent } from "./check";
+import { AuditUnavailable } from "./contrast";
 import { describeUser } from "./context";
 
 // The "more powerful" side of the pipeline: Claude, through the Agent SDK, writes
@@ -303,7 +304,7 @@ export function extend(persona: Persona, request: string, gapKind: string) {
     ),
     tool(
       "write_component",
-      "Write a new component, render it server-side with the user's data for every prop option, and install it into the shared library if it passes. Returns errors to fix.",
+      "Write a new component, render it for every prop option and eligible user, audit its text for contrast, overlap and size in a real browser in both themes, and install it into the shared library if it passes. Returns errors to fix.",
       WriteComponent,
       async (input) => {
         const library = getLibrary();
@@ -324,12 +325,18 @@ export function extend(persona: Persona, request: string, gapKind: string) {
         if (propErrors.length) return fail(propErrors.join("\n"));
         const staged = join(STAGING_DIR, `${input.id}-${++attempt}.tsx`);
         writeFileSync(staged, input.code);
-        const errors = await checkComponent(staged, parsed.data, persona.subject);
+        let errors: string[];
+        try {
+          errors = await checkComponent(staged, parsed.data, persona.subject);
+        } catch (e) {
+          if (!(e instanceof AuditUnavailable)) throw e;
+          return fail(`Not installed: the legibility audit could not run on this server (${e.message}). This is a server problem, not a problem with the component. Stop and report it.`);
+        }
         if (errors.length) return fail(`Not installed.\n${errors.join("\n")}`);
         renameSync(staged, join(COMPONENT_DIR, `${input.id}.tsx`));
         addGenerated(parsed.data);
         emit({ type: "component.installed", userId: persona.id, componentId: input.id, title: input.title, runId: activeRun(persona.id) ?? "" });
-        return text(`Installed '${input.id}'. Every prop option rendered without errors. Add it to the spec with submit_spec_patch.`);
+        return text(`Installed '${input.id}'. Every prop option rendered and passed the legibility audit. Add it to the spec with submit_spec_patch.`);
       },
     ),
     tool(
@@ -388,7 +395,8 @@ Writing a component:
 - Read kit_reference first. Read one similar existing component with read_component for idiom (demand-chart for SVG charts, advisee-table for tables).
 - Pick the Pattern Atlas entry it instantiates (atlas_search, atlas_get). Expose 1 to 3 of that entry's sub-dimensions as props with 2 to 4 literal options each, so Jev can adapt it and other users can reuse it.
 - Compute from the subject's data through the kit hooks. Never hard-code this user's values; the component joins a shared library.
-- write_component renders every prop option with this user's data. If it returns errors, fix the code and call it again.
+- Legibility is enforced. Follow the kit reference's Contrast section: text on a filled mark uses heat(t) or the contrast surface pair, never a series colour or a translucent fill.
+- write_component renders every prop option with every eligible user's data, then renders it in a real browser in light and dark themes and measures every piece of text against what is painted behind it. If it returns errors, fix the code and call it again.
 
 Patching the spec: add a view whose purpose literally covers requests like the flagged one and contains the new component, alongside existing components when they help. Keep other views unless replacing one on purpose.
 

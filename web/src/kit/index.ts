@@ -141,5 +141,17 @@ export function scaleLinear([d0, d1]: [number, number], [r0, r1]: [number, numbe
   return (v: number) => r0 + (v - d0) * k;
 }
 
+export const HEAT_STEPS = 6;
+
+/**
+ * A colour on the sequential ramp for heatmaps and filled cells. `t` runs 0..1
+ * and 0 is the empty cell. Draw the mark with `fill` and any text on it with
+ * `ink`; each pair stays legible in both themes.
+ */
+export function heat(t: number) {
+  const step = !(t > 0) ? 0 : Math.min(HEAT_STEPS, Math.max(1, Math.ceil(t * HEAT_STEPS)));
+  return { step, fill: `var(--vbg-custom-heat-${step})`, ink: `var(--vbg-custom-heat-ink-${step})` };
+}
+
 export const fmtPct = (x: number) => `${Math.round(x * 100)}%`;
 export const plural = (n: number, word: string, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;

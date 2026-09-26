@@ -3,6 +3,7 @@ import { streamSSE } from "hono/streaming";
 import { personaById, PERSONAS } from "../shared/personas";
 import type { ServeContext } from "../shared/spec";
 import { activeRun, CLAUDE_MODEL, extend, personalize } from "./claude/agents";
+import { chromePath } from "./claude/contrast";
 import { clearHistory, emit, recent, subscribe } from "./events";
 import { gate, JEV_MODEL, serve } from "./jev";
 import { DEFAULT_SPEC, getLibrary, getSpec, getSpecHistory, resetAll, resetUser } from "./store";
@@ -117,4 +118,6 @@ app.get("/api/events", (c) =>
 
 const port = Number(process.env.PORT ?? 8787);
 console.log(`pipeline server on http://localhost:${port}  jev=${JEV_MODEL} claude=${CLAUDE_MODEL}`);
+if (!chromePath())
+  console.warn("no Chrome or Chromium found: generated components cannot pass the legibility audit, so Claude cannot install any. Install Chrome or set CHROME_PATH.");
 export default { port, fetch: app.fetch, idleTimeout: 0 };

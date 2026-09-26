@@ -10,8 +10,13 @@
     in
     {
       devShells = forAll (pkgs: {
+        # The legibility audit drives a headless Chrome. On macOS it uses the
+        # installed Google Chrome; nixpkgs' Chromium only builds for Linux.
         default = pkgs.mkShell {
-          packages = [ pkgs.bun pkgs.nodejs_22 ];
+          packages = [ pkgs.bun pkgs.nodejs_22 ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.chromium ];
+          shellHook = pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
+            export CHROME_PATH=${pkgs.chromium}/bin/chromium
+          '';
         };
       });
     };

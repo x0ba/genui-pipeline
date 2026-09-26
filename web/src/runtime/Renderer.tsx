@@ -1,6 +1,7 @@
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef, type ReactNode } from "react";
 import { resolveProps, type ComponentDef, type Decision, type Layout, type Slot, type Spec } from "../../../shared/spec";
+import { watchContrast } from "./contrast";
 import { componentFor, SlotBoundary } from "./registry";
 
 const spring = { type: "spring", stiffness: 260, damping: 32, mass: 0.9 } as const;
@@ -108,9 +109,28 @@ function SlotFrame(p: {
       )}
       <SlotBoundary name={def.title}>
         <Suspense fallback={<p className="vbg-meta">Loading {def.title}…</p>}>
-          {Component ? <Component props={props} /> : <p data-state="error">No implementation for {def.id}</p>}
+          {!Component ? (
+            <p data-state="error">No implementation for {def.id}</p>
+          ) : def.source === "generated" ? (
+            <ContrastGuard name={def.id}>
+              <Component props={props} />
+            </ContrastGuard>
+          ) : (
+            <Component props={props} />
+          )}
         </Suspense>
       </SlotBoundary>
     </motion.section>
+  );
+}
+
+/** Generated code passed the install audit, but data, themes and states change at runtime. */
+function ContrastGuard({ name, children }: { name: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => watchContrast(ref.current!, name), [name]);
+  return (
+    <div ref={ref} className="vbg-custom-guard">
+      {children}
+    </div>
   );
 }

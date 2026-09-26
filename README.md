@@ -10,6 +10,22 @@ The demo app is a university course planner with three people to switch between:
 - **Dr. Adaeze Okafor**, an advisor with 38 advisees. She works at a desktop and acts on the roster in bulk.
 - **Sam Rivera**, a first-year student whose needs match the default app.
 
+## Interesting Observations
+
+- Despite the UI being spec-driven with the intent of making sure nothing ever looks "wrong", things can still look "wrong." For example, the spec never makes sure UI elements have enough contrast with each other to be legible, which seems to also be something LLMs continuoully struggle with. As always, the solution was to add verification, a little like the verification the pipeline does with UI specs. Whenever a component is installed, it is rendered in a headless Chrome with the app's real stylesheets, and a contrast audit is run. The component is rejected if any text is below 4.5:1 (3:1 for large text), overlaps other text, renders under 10px, or has a fill the stylesheet overrides.
+
+<table>
+  <tr>
+    <td align="center"><b>Unverified</b></td>
+    <td align="center"><b>Verified</b></td>
+  </tr>
+  <tr>
+    <td><img src="assets/unverified_contrast.png" width="400" alt="Verified contrast heatmap"></td>
+    <td><img src="assets/verified_contrast.png" width="400" alt="Unverified contrast heatmap"></td>
+  </tr>
+</table>
+
+
 ## How it works
 
 Everyone starts on one shared default spec. Jev serves every request from whatever spec the person has. Claude only runs when Jev reports that the spec falls short: either the default does not fit the person at all, or a request asks for something no view can show.
@@ -63,7 +79,15 @@ When a write tool rejects its input, it returns the errors to Claude, which fixe
 - The module imports only `react`, `motion/react`, and `@kit`.
 - The source does not mention `fetch`, `XMLHttpRequest`, `localStorage`, `document.cookie`, or `eval`.
 - The module default-exports a function component.
-- The component renders on the server with the person's data, once with default props and once for every other option of every prop, without throwing and with visible text each time.
+- The source contains no raw colour values: no hex codes, no `rgb()`, `oklch()` or similar functions, and no named colours.
+- The component renders on the server for every person whose role can use it, once with default props and once for every other option of every prop, without throwing and with visible text each time.
+- The component passes the legibility audit in `server/claude/contrast.ts`.
+
+The legibility audit bundles the component and renders it in headless Chrome with the same stylesheets as the app. It renders every prop option for every eligible person, in both the light and dark themes, at desktop width. It also renders the defaults at phone width and after clicking up to six of the component's controls. For each piece of text, it compares the text colour, with all opacity applied, against a screenshot of what is painted behind the text. It rejects the component if any text falls below WCAG AA contrast (4.5:1, or 3:1 for large text), overlaps other text, renders under 10px, or sets a `fill` attribute on SVG text that the stylesheet overrides. The errors name the text, both colours, the theme and the props, so Claude can fix them and try again.
+
+Two things make the audit easy to pass. The kit's `heat(t)` returns a fill for a mark and an ink for text on that mark, and every pair is at least 4.5:1 in both themes. And `KIT.md` lists the only safe pairs of text and background colours. As a last resort, the renderer wraps each generated component in a guard (`watchContrast` in `web/src/runtime/contrast.ts`). The guard re-measures text whenever the component changes, scrolls, resizes or switches theme, recolours any label below AA, and logs a warning.
+
+`bun run contrast` runs the audit against every installed component and the `heat()` ramp. It then checks that the audit rejects each fixture in `scripts/fixtures/illegible.tsx`, and that the guard repairs the fixtures with colour problems.
 
 A component that passes moves from `data/runtime/staging/` to `data/runtime/components/` and is added to `data/runtime/library.json`. It joins the shared library, so later specs for other people can use it too. The browser imports generated components at runtime through Vite's `/@fs/` route (see `web/src/runtime/registry.tsx`), and each slot renders inside an error boundary. The contract generated components follow is in `web/src/kit/KIT.md`.
 
@@ -76,6 +100,7 @@ You need:
 - Nix with flakes enabled, which provides Bun and Node from `flake.nix`. You can also install Bun 1.4 yourself.
 - A TypeSafe API key from [the TypeSafe console](https://console.typesafe.ai/keys).
 - Claude credentials: either an `ANTHROPIC_API_KEY` or a logged-in Claude Code install.
+- Google Chrome or Chromium for the legibility audit. On macOS the installed Google Chrome is found automatically. On Linux the Nix dev shell provides Chromium. Without a browser, Claude cannot install generated components.
 
 1. Copy the example environment file and set `TYPESAFE_API_KEY` in it:
 
@@ -124,6 +149,7 @@ To start over for one person, click the reset button at the top of the panel, su
 | `CLAUDE_EXTEND_EFFORT` | `high` | Reasoning effort for the extend agent. |
 | `PORT` | `8787` | API server port. The Vite proxy in `vite.config.ts` expects 8787. |
 | `DEBUG_AGENT` | unset | Logs the agent's MCP server status and tool list at startup. |
+| `CHROME_PATH` | detected | Browser executable for the legibility audit. |
 
 The Jev cost in the panel is an estimate at $0.042 per million input tokens, set in `server/jev.ts`.
 
@@ -137,6 +163,7 @@ The Jev cost in the panel is an estimate at $0.042 per million input tokens, set
 | `bun run build` | Builds the frontend. |
 | `bun run typecheck` | Runs `tsc --noEmit`. |
 | `bun run atlas` | Regenerates `data/atlas.json` from `Pattern Atlas.html`. |
+| `bun run contrast [id ...]` | Runs the legibility audit on installed components. Without ids, it also self-tests the audit and the runtime guard. |
 
 The scripts in `scripts/` call the real models from the command line, bill your keys, and do not need the web app:
 
@@ -176,6 +203,7 @@ server/
 	jev.ts                gate and serve
 	claude/agents.ts      personalize and extend agents and their tools
 	claude/check.ts       generated-component validation
+	claude/contrast.ts    legibility audit in headless Chrome
 	store.ts              spec and library storage
 shared/
 	spec.ts               spec schema and checkSpec
@@ -185,7 +213,7 @@ shared/
 web/src/
 	components/           builtin components
 	kit/                  data hooks and helpers for components, and KIT.md
-	runtime/              Renderer and the component registry
+	runtime/              Renderer, the component registry, and contrast measurement
 	pipeline/             the Pipeline panel
-scripts/                dev runner, atlas extraction, and manual model checks
+scripts/                dev runner, atlas extraction, contrast audit, and manual model checks
 ```

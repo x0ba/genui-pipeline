@@ -9,6 +9,29 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 440px);
   min-height: 100vh;
+
+  /* Sequential ramp for heatmaps and filled cells, read through heat() in @kit.
+     Each ink is at least 4.5:1 on its fill in both themes; mid steps need a
+     dark ink in both themes, so the pairs are not simply text-on-surface. */
+  --vbg-custom-heat-0: var(--vbg-surface-secondary);
+  --vbg-custom-heat-1: light-dark(oklch(0.955 0 0), oklch(0.25 0 0));
+  --vbg-custom-heat-2: light-dark(oklch(0.88 0 0), oklch(0.34 0 0));
+  --vbg-custom-heat-3: light-dark(oklch(0.78 0 0), oklch(0.46 0 0));
+  --vbg-custom-heat-4: light-dark(oklch(0.62 0 0), oklch(0.64 0 0));
+  --vbg-custom-heat-5: light-dark(oklch(0.44 0 0), oklch(0.8 0 0));
+  --vbg-custom-heat-6: light-dark(oklch(0.28 0 0), oklch(0.93 0 0));
+  --vbg-custom-heat-ink-0: var(--vbg-text-primary);
+  --vbg-custom-heat-ink-1: var(--vbg-text-primary);
+  --vbg-custom-heat-ink-2: var(--vbg-text-primary);
+  --vbg-custom-heat-ink-3: var(--vbg-text-primary);
+  --vbg-custom-heat-ink-4: light-dark(oklch(0.205 0 0), oklch(0 0 0));
+  --vbg-custom-heat-ink-5: var(--vbg-surface-primary);
+  --vbg-custom-heat-ink-6: var(--vbg-surface-primary);
+}
+
+/* Wraps generated components for the runtime contrast guard without adding a box. */
+.vbg-custom-guard {
+  display: contents;
 }
 
 .vbg-custom-main {
@@ -332,8 +355,9 @@
 }
 
 /* ------------------------------------------------ shared helpers */
+/* --vbg-color-error (red-700) is a fill colour: 4.0:1 on white, below AA for text. */
 .vbg-custom-app [data-state="error"] {
-  color: var(--vbg-color-error);
+  color: var(--vbg-red-900);
 }
 .vbg-custom-app [data-state="warning"] {
   color: var(--vbg-color-warning);
@@ -358,6 +382,7 @@
 .vbg-custom-stack-4 > *,
 .vbg-custom-stack-6 > *,
 .vbg-custom-slot > *,
+.vbg-custom-guard > *,
 .vbg-custom-slot-head > * {
   margin: 0;
 }

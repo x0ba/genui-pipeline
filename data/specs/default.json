@@ -1,0 +1,54 @@
+{
+  "id": "default",
+  "version": 1,
+  "userId": null,
+  "parent": null,
+  "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+  "home": "catalog",
+  "views": [
+    {
+      "id": "catalog",
+      "title": "Course catalog",
+      "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+      "layout": "main-aside",
+      "slots": [
+        { "id": "notice", "component": "deadline-banner", "region": "top", "props": {}, "adaptive": ["tone"] },
+        { "id": "results", "component": "course-search", "region": "main", "props": {}, "adaptive": ["timeFilter", "scope", "ranking"] },
+        { "id": "detail", "component": "course-detail", "region": "aside", "props": {}, "adaptive": ["emphasis"] }
+      ]
+    },
+    {
+      "id": "schedule",
+      "title": "My schedule",
+      "roles": ["student"],
+      "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+      "layout": "main-aside",
+      "slots": [
+        { "id": "week", "component": "week-calendar", "region": "main", "props": {}, "adaptive": ["primaryView"] },
+        { "id": "plan", "component": "plan-cart", "region": "aside", "props": {}, "adaptive": [] }
+      ]
+    },
+    {
+      "id": "progress",
+      "title": "Degree progress",
+      "roles": ["student"],
+      "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+      "layout": "main-aside",
+      "slots": [
+        { "id": "numbers", "component": "stat-strip", "region": "top", "props": { "focus": "progress" }, "adaptive": [] },
+        { "id": "requirements", "component": "degree-progress", "region": "main", "props": {}, "adaptive": ["presentation", "detail"] }
+      ]
+    },
+    {
+      "id": "demand",
+      "title": "Seat availability",
+      "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+      "layout": "stack",
+      "slots": [
+        { "id": "chart", "component": "demand-chart", "region": "main", "props": {}, "adaptive": ["measure", "scope"] }
+      ]
+    }
+  ],
+  "rationale": ["The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."],
+  "changelog": [{ "version": 1, "at": "2026-10-01T00:00:00.000Z", "by": "default", "summary": "Shared default spec" }]
+}

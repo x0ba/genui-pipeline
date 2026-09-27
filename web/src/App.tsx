@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } fro
 import type { PipelineEvent } from "../../shared/events";
 import { viewsFor, type Decision, type ServeContext, type Spec, type Unmatched } from "../../shared/spec";
 import { api, useEvents, type Bootstrap, type SpecState } from "./api";
-import { KitProvider, useAppState } from "./kit";
+import { collapse, enter, exit, indicator, KitProvider, move, useAppState } from "./kit";
 import { PipelinePanel } from "./pipeline/PipelinePanel";
 import { Renderer } from "./runtime/Renderer";
 import { Segmented } from "./Segmented";
@@ -23,7 +23,10 @@ export function App() {
   const [context, setContext] = useState<ServeContext>({ device: "desktop", phase: "planning" });
   const [request, setRequest] = useState("");
   const [lastRequest, setLastRequest] = useState("");
-  const [serving, setServing] = useState(false);
+  // What started the in-flight serve; only "ask" (the prompt bar) drives the Ask button.
+  const [serving, setServing] = useState<"ask" | "other" | null>(null);
+  // The tab being opened, so the underline answers the click before Jev does.
+  const [opening, setOpening] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [gap, setGap] = useState<Gap | null>(null);
   const [gateNote, setGateNote] = useState<string | null>(null);
@@ -56,11 +59,12 @@ export function App() {
   }, [panelCollapsed]);
 
   const serve = useCallback(
-    async (text: string, opts: { forceView?: string; ctx?: ServeContext; spec?: SpecState } = {}) => {
+    async (text: string, opts: { forceView?: string; ctx?: ServeContext; spec?: SpecState; ask?: boolean } = {}) => {
       const s = opts.spec ?? specState;
       if (!s) return;
       const mine = ++seq.current;
-      setServing(true);
+      setServing(opts.ask ? "ask" : "other");
+      setOpening(opts.forceView ?? null);
       setError(null);
       try {
         const d = await api.serve(userId, { request: text, context: opts.ctx ?? context, currentView: viewId ?? undefined, forceView: opts.forceView });
@@ -75,7 +79,10 @@ export function App() {
         // Without a decision, show the spec's own home view with its default props.
         setViewId((v) => opts.forceView ?? v ?? s.spec.home);
       } finally {
-        if (mine === seq.current) setServing(false);
+        if (mine === seq.current) {
+          setServing(null);
+          setOpening(null);
+        }
       }
     },
     [specState, userId, context, viewId],
@@ -140,7 +147,7 @@ export function App() {
 
   const onAsk = (e: FormEvent) => {
     e.preventDefault();
-    void serve(request);
+    void serve(request, { ask: true });
   };
 
   const personalize = async (force = false) => {
@@ -188,7 +195,7 @@ export function App() {
   const activeKind = runs.active?.kind;
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="user" transition={move}>
       <div className="vbg-custom-app" data-panel={panelCollapsed ? "collapsed" : "open"}>
         <div className="vbg-custom-main">
           <header className="vbg-custom-masthead">
@@ -206,35 +213,31 @@ export function App() {
 
           <AnimatePresence initial={false}>
             {spec && (!personal || activeKind === "personalize") && (
-              <motion.div
-                key="personalize"
-                className="vbg-custom-callout"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                {activeKind === "personalize" ? (
-                  <p aria-live="polite">
-                    <strong>Claude is designing {persona.short}'s spec</strong> from their needs, usage and the Pattern Atlas. Follow along in the pipeline panel.
-                  </p>
-                ) : (
-                  <>
-                    <p>
-                      {persona.short} is on the <strong>shared default spec</strong>. Jev first checks whether the default already fits; only if it doesn't does Claude build a personal spec.
+              <motion.div key="personalize" className="vbg-custom-reveal" {...collapse}>
+                <div className="vbg-custom-callout">
+                  {activeKind === "personalize" ? (
+                    <p aria-live="polite">
+                      <strong>Claude is designing {persona.short}'s spec</strong> from their needs, usage and the Pattern Atlas. Follow along in the pipeline panel.
                     </p>
-                    <div className="vbg-custom-actions">
-                      <button type="button" className="vbg-button" onClick={() => personalize()} disabled={Boolean(runs.active)}>
-                        Personalize
-                      </button>
-                      {gateNote && (
-                        <button type="button" className="vbg-custom-text-button" onClick={() => personalize(true)}>
-                          Personalize anyway
+                  ) : (
+                    <>
+                      <p>
+                        {persona.short} is on the <strong>shared default spec</strong>. Jev first checks whether the default already fits; only if it doesn't does Claude build a personal spec.
+                      </p>
+                      <div className="vbg-custom-actions">
+                        <button type="button" className="vbg-button" onClick={() => personalize()} disabled={Boolean(runs.active)}>
+                          Personalize
                         </button>
-                      )}
-                    </div>
-                    {gateNote && <p className="vbg-meta">{gateNote}</p>}
-                  </>
-                )}
+                        {gateNote && (
+                          <button type="button" className="vbg-custom-text-button" onClick={() => personalize(true)}>
+                            Personalize anyway
+                          </button>
+                        )}
+                      </div>
+                      {gateNote && <p className="vbg-meta">{gateNote}</p>}
+                    </>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -252,8 +255,8 @@ export function App() {
                   placeholder={`Ask for what you need, ${persona.short}`}
                   autoComplete="off"
                 />
-                <button type="submit" className="vbg-button" disabled={serving}>
-                  {serving ? "Serving…" : "Ask"}
+                <button type="submit" className="vbg-button" disabled={serving === "ask"}>
+                  {serving === "ask" ? "Serving…" : "Ask"}
                 </button>
               </form>
               <div className="vbg-custom-suggestions" role="group" aria-label="Suggestions">
@@ -264,7 +267,7 @@ export function App() {
                     className="vbg-custom-chip"
                     onClick={() => {
                       setRequest(s);
-                      void serve(s);
+                      void serve(s, { ask: true });
                     }}
                   >
                     {s}
@@ -275,37 +278,32 @@ export function App() {
 
             <AnimatePresence initial={false}>
               {gap && (
-                <motion.div
-                  key="gap"
-                  className="vbg-custom-gap"
-                  role="status"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                >
-                  {activeKind === "extend" ? (
-                    <p aria-live="polite">
-                      <strong>Claude is extending the spec</strong> for “{gap.request}”. The new view drops in when it passes validation.
-                    </p>
-                  ) : (
-                    <>
-                      <p>
-                        <strong>Not in this interface yet.</strong> Jev flagged “{gap.request}” as outside the spec ({Math.round(gap.probability * 100)}%,{" "}
-                        {gap.kind.replace(/-/g, " ")}).{" "}
-                        {gap.unmatched.length
-                          ? `No option for ${gap.unmatched.map((u) => u.label.toLowerCase()).join(" or ")} matches it; showing the closest one instead.`
-                          : "Showing the closest view instead."}
+                <motion.div key="gap" className="vbg-custom-reveal" {...collapse}>
+                  <div className="vbg-custom-gap" role="status">
+                    {activeKind === "extend" ? (
+                      <p aria-live="polite">
+                        <strong>Claude is extending the spec</strong> for “{gap.request}”. The new view drops in when it passes validation.
                       </p>
-                      <div className="vbg-custom-actions">
-                        <button type="button" className="vbg-button" onClick={extend} disabled={Boolean(runs.active)}>
-                          Build it with Claude
-                        </button>
-                        <button type="button" className="vbg-custom-text-button" onClick={() => setGap(null)}>
-                          Dismiss
-                        </button>
-                      </div>
-                    </>
-                  )}
+                    ) : (
+                      <>
+                        <p>
+                          <strong>Not in this interface yet.</strong> Jev flagged “{gap.request}” as outside the spec ({Math.round(gap.probability * 100)}%,{" "}
+                          {gap.kind.replace(/-/g, " ")}).{" "}
+                          {gap.unmatched.length
+                            ? `No option for ${gap.unmatched.map((u) => u.label.toLowerCase()).join(" or ")} matches it; showing the closest one instead.`
+                            : "Showing the closest view instead."}
+                        </p>
+                        <div className="vbg-custom-actions">
+                          <button type="button" className="vbg-button" onClick={extend} disabled={Boolean(runs.active)}>
+                            Build it with Claude
+                          </button>
+                          <button type="button" className="vbg-custom-text-button" onClick={() => setGap(null)}>
+                            Dismiss
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -326,13 +324,13 @@ export function App() {
                       aria-current={v.id === viewId}
                       onClick={() => serve(`Open the "${v.title}" view`, { forceView: v.id })}
                     >
-                      {v.id === viewId && <motion.span layoutId="tab-underline" className="vbg-custom-tab-underline" />}
+                      {v.id === (opening ?? viewId) && <motion.span layoutId="tab-underline" className="vbg-custom-tab-underline" transition={indicator} />}
                       {v.title}
                     </button>
                   ))}
                 </nav>
                 <KitProvider key={userId} subject={persona.subject}>
-                  <div className="vbg-custom-stage" aria-busy={serving}>
+                  <div className="vbg-custom-stage" aria-busy={serving !== null}>
                     {viewId ? (
                       <Renderer
                         spec={spec}
@@ -343,7 +341,7 @@ export function App() {
                         fresh={fresh}
                       />
                     ) : (
-                      <p className="vbg-meta">Jev is choosing the first screen…</p>
+                      <p className="vbg-meta vbg-custom-pending">Jev is choosing the first screen…</p>
                     )}
                   </div>
                   <Notices />
@@ -376,9 +374,16 @@ function Notices() {
   const notices = useAppState((s) => s.notices);
   return (
     <div className="vbg-custom-notices" aria-live="polite">
-      <AnimatePresence>
+      {/* popLayout lets the rest of the stack close the gap while a notice fades. */}
+      <AnimatePresence mode="popLayout">
         {notices.map((n) => (
-          <motion.p key={n.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+          <motion.p
+            key={n.id}
+            layout="position"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0, transition: enter }}
+            exit={{ opacity: 0, scale: 0.96, transition: exit }}
+          >
             {n.text}
           </motion.p>
         ))}

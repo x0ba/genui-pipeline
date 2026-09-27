@@ -101,7 +101,6 @@ export default function AdviseeTable({ props }: Props) {
             {rows.map(({ s, r, credits, pending }) => (
               <motion.tr
                 layout="position"
-                transition={{ type: "spring", stiffness: 500, damping: 45 }}
                 key={s.id}
                 aria-selected={selected === s.id}
                 className="vbg-custom-clickable"

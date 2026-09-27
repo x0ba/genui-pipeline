@@ -27,6 +27,21 @@
   --vbg-custom-heat-ink-4: light-dark(oklch(0.205 0 0), oklch(0 0 0));
   --vbg-custom-heat-ink-5: var(--vbg-surface-primary);
   --vbg-custom-heat-ink-6: var(--vbg-surface-primary);
+
+  /* Motion, matching easeOut in @kit. Starts fast so the interface answers at once. */
+  --vbg-custom-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Pressable things give way slightly under the pointer. */
+.vbg-custom-app .vbg-button {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 160ms var(--vbg-custom-ease-out);
+}
+.vbg-custom-app .vbg-button:active:not(:disabled),
+.vbg-custom-chip:active {
+  transform: scale(0.97);
 }
 
 /* Wraps generated components for the runtime contrast guard without adding a box. */
@@ -40,6 +55,7 @@
   gap: var(--vbg-space-6);
   padding: var(--vbg-space-8) var(--vbg-space-10) var(--vbg-space-16);
   min-width: 0;
+  --vbg-custom-reveal-gap: var(--vbg-space-6);
 }
 
 .vbg-custom-masthead {
@@ -81,7 +97,8 @@
   font: inherit;
   white-space: nowrap;
   cursor: pointer;
-  transition: color 0.15s ease-out;
+  /* No press scale here: the sliding thumb inside would be measured mid-press. */
+  transition: color 150ms ease;
 }
 .vbg-custom-segmented > button:hover,
 .vbg-custom-segmented > button[aria-checked="true"] {
@@ -109,10 +126,19 @@
   position: relative;
 }
 
-.vbg-custom-callout,
-.vbg-custom-gap {
-  overflow: hidden;
+/* A block that grows in from zero height inside a flex column. The column's gap
+   moves inside it, so the space closes with the height instead of jumping when
+   the block mounts or unmounts. Parents set --vbg-custom-reveal-gap to their gap. */
+/* Scoped to the app so the stacks' `> * { margin: 0 }` resets cannot win. */
+.vbg-custom-app .vbg-custom-reveal {
+  /* Resolved here, so a child that is itself a stack still reads the parent's gap. */
+  --vbg-custom-reveal-space: var(--vbg-custom-reveal-gap, 0px);
+  margin-bottom: calc(-1 * var(--vbg-custom-reveal-space));
 }
+.vbg-custom-app .vbg-custom-reveal > * {
+  margin-bottom: var(--vbg-custom-reveal-space);
+}
+
 .vbg-custom-callout > *,
 .vbg-custom-gap > * {
   margin: 0;
@@ -138,8 +164,8 @@
   flex-direction: column;
   gap: var(--vbg-space-4);
   min-width: 0;
-  transition: max-width 0.4s cubic-bezier(0.2, 0, 0, 1);
   max-width: 100%;
+  --vbg-custom-reveal-gap: var(--vbg-space-4);
 }
 .vbg-custom-device[data-device="phone"] {
   max-width: 420px;
@@ -192,7 +218,10 @@
   font-size: var(--vbg-type-compact);
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 160ms var(--vbg-custom-ease-out);
 }
 .vbg-custom-chip:hover {
   background: var(--vbg-surface-secondary);
@@ -253,12 +282,25 @@
 .vbg-custom-stage {
   container-type: inline-size;
   min-height: 320px;
-  transition: opacity 0.2s ease-out;
+  transition: opacity 150ms ease;
 }
+/* Most answers land in under 200ms. Dim only when one is slow, so fast answers
+   swap cleanly instead of flickering. */
 .vbg-custom-stage[aria-busy="true"] {
   opacity: 0.72;
+  transition-delay: 250ms;
+}
+/* Same for the first-screen placeholder: it only fades in if the wait is noticeable. */
+.vbg-custom-pending {
+  animation: vbg-custom-appear 200ms 400ms ease both;
+}
+@keyframes vbg-custom-appear {
+  from {
+    opacity: 0;
+  }
 }
 .vbg-custom-view {
+  position: relative;
   display: grid;
   gap: var(--vbg-space-8) var(--vbg-space-10);
   align-items: start;
@@ -271,6 +313,8 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .vbg-custom-region {
+  /* Leaving slots are lifted out of flow and positioned against this box. */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--vbg-space-8);
@@ -279,6 +323,16 @@
 .vbg-custom-region[data-region="top"] {
   grid-column: 1 / -1;
   gap: var(--vbg-space-4);
+}
+/* Empty regions take no row. A top region whose slots are all fading out (Motion
+   marks them data-motion-pop-id) lifts out of the grid at once, so the regions
+   below start moving to their new place together with everything else. */
+.vbg-custom-region:empty {
+  display: none;
+}
+.vbg-custom-region[data-region="top"]:not(:has(> :not([data-motion-pop-id]))) {
+  position: absolute;
+  inset-inline: 0;
 }
 @container (max-width: 620px) {
   .vbg-custom-view[data-layout] {
@@ -371,12 +425,15 @@
 }
 .vbg-custom-stack-2 {
   gap: var(--vbg-space-2);
+  --vbg-custom-reveal-gap: var(--vbg-space-2);
 }
 .vbg-custom-stack-4 {
   gap: var(--vbg-space-4);
+  --vbg-custom-reveal-gap: var(--vbg-space-4);
 }
 .vbg-custom-stack-6 {
   gap: var(--vbg-space-6);
+  --vbg-custom-reveal-gap: var(--vbg-space-6);
 }
 .vbg-custom-stack-2 > *,
 .vbg-custom-stack-4 > *,
@@ -623,7 +680,8 @@
   display: grid;
   border-top: 1px solid var(--vbg-border-subtle);
 }
-.vbg-custom-plan > li {
+/* The li only animates its height; the row's box lives on the child. */
+.vbg-custom-plan-item {
   display: grid;
   gap: var(--vbg-space-1);
   padding: var(--vbg-space-3) 0;
@@ -726,14 +784,14 @@
   display: grid;
   border-top: 1px solid var(--vbg-border-subtle);
 }
-.vbg-custom-queue > li {
+/* The li only animates its height; the row's box lives on the child. */
+.vbg-custom-queue-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--vbg-space-2) var(--vbg-space-4);
   align-items: center;
   padding: var(--vbg-space-3) 0;
   border-bottom: 1px solid var(--vbg-border-subtle);
-  overflow: hidden;
 }
 .vbg-custom-queue > li[aria-current="true"] {
   background: var(--vbg-surface-secondary);
@@ -929,6 +987,7 @@
   display: block;
   height: 100%;
   background: var(--vbg-text-secondary);
+  transform-origin: left;
 }
 .vbg-custom-prob[data-chosen] .vbg-custom-prob-track > span {
   background: var(--vbg-text-primary);

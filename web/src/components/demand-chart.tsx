@@ -46,7 +46,7 @@ export default function DemandChart({ props }: Props) {
       </div>
       <ol className="vbg-bar-list vbg-custom-demand" tabIndex={0} aria-label={`${MEASURE_TITLE[measure]} by course`}>
         {rows.map((r) => (
-          <motion.li layout key={r.code} className="vbg-bar" data-role={measure === "fill-rate" && r.value >= 1 ? "primary" : undefined}>
+          <motion.li layout="position" key={r.code} className="vbg-bar" data-role={measure === "fill-rate" && r.value >= 1 ? "primary" : undefined}>
             <button type="button" className="vbg-bar-label vbg-custom-text-button" onClick={() => selectCourse(r.code)}>
               {r.code}
             </button>
@@ -55,7 +55,7 @@ export default function DemandChart({ props }: Props) {
               {r.detail && <span className="vbg-meta"> {r.detail}</span>}
             </span>
             <span className="vbg-bar-track">
-              <motion.span className="vbg-bar-fill" initial={false} animate={{ width: `${Math.min(1, r.value / max) * 100}%` }} transition={{ type: "spring", stiffness: 200, damping: 30 }} />
+              <motion.span className="vbg-bar-fill" initial={false} animate={{ width: `${Math.min(1, r.value / max) * 100}%` }} />
             </span>
           </motion.li>
         ))}

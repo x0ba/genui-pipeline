@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { missingPrereqs, studentById, useOverrides, useSelection, type OverrideRequest } from "@kit";
+import { collapse, enter, missingPrereqs, studentById, useOverrides, useSelection, type OverrideRequest } from "@kit";
 
 type Props = { props: Record<string, string> };
 
@@ -32,49 +32,61 @@ export default function ApprovalQueue({ props }: Props) {
           </button>
         )}
       </div>
-      {[...groups.entries()].map(([group, items]) => (
-        <section key={group || "all"} className="vbg-custom-stack-2">
-          {group && <h3 className="vbg-heading-16">{group}</h3>}
-          <ul className="vbg-custom-queue">
-            <AnimatePresence initial={false}>
-              {items.map((r) => {
-                const s = studentById.get(r.student)!;
-                const missing = r.kind === "prerequisite" ? missingPrereqs(s, r.course) : [];
-                return (
-                  <motion.li key={r.id} layout exit={{ opacity: 0, height: 0 }} aria-current={student === r.student}>
-                    <div className="vbg-custom-queue-main">
-                      <p>
-                        <strong>{s.name}</strong> · {r.course} · {KIND[r.kind]}
-                      </p>
-                      <p className="vbg-meta">
-                        {r.reason}
-                        {missing.length ? ` Missing ${missing.join(", ")}.` : ""} Submitted {r.submitted}.
-                      </p>
-                    </div>
-                    <div className="vbg-custom-actions">
-                      {inline ? (
-                        <>
-                          <button type="button" className="vbg-button" onClick={() => decide(r.id, "approved")}>
-                            Approve
-                          </button>
-                          <button type="button" className="vbg-custom-text-button" onClick={() => decide(r.id, "denied")}>
-                            Deny
-                          </button>
-                        </>
-                      ) : (
-                        <button type="button" className="vbg-custom-text-button" onClick={() => selectStudent(r.student)}>
-                          Review {s.name.split(" ")[0]}
-                        </button>
-                      )}
-                    </div>
-                  </motion.li>
-                );
-              })}
-            </AnimatePresence>
-          </ul>
-        </section>
-      ))}
-      {pending.length === 0 && <p>No pending requests.</p>}
+      <AnimatePresence initial={false}>
+        {[...groups.entries()].map(([group, items]) => (
+          // A group closes with its last request instead of vanishing under it.
+          <motion.section key={group || "all"} className="vbg-custom-reveal" {...collapse}>
+            <div className="vbg-custom-stack-2">
+              {group && <h3 className="vbg-heading-16">{group}</h3>}
+              <ul className="vbg-custom-queue">
+                <AnimatePresence initial={false}>
+                  {items.map((r) => {
+                    const s = studentById.get(r.student)!;
+                    const missing = r.kind === "prerequisite" ? missingPrereqs(s, r.course) : [];
+                    return (
+                      // Decided requests close up in place; the rows below follow the height.
+                      <motion.li key={r.id} {...collapse} aria-current={student === r.student}>
+                        <div className="vbg-custom-queue-item">
+                          <div className="vbg-custom-queue-main">
+                            <p>
+                              <strong>{s.name}</strong> · {r.course} · {KIND[r.kind]}
+                            </p>
+                            <p className="vbg-meta">
+                              {r.reason}
+                              {missing.length ? ` Missing ${missing.join(", ")}.` : ""} Submitted {r.submitted}.
+                            </p>
+                          </div>
+                          <div className="vbg-custom-actions">
+                            {inline ? (
+                              <>
+                                <button type="button" className="vbg-button" onClick={() => decide(r.id, "approved")}>
+                                  Approve
+                                </button>
+                                <button type="button" className="vbg-custom-text-button" onClick={() => decide(r.id, "denied")}>
+                                  Deny
+                                </button>
+                              </>
+                            ) : (
+                              <button type="button" className="vbg-custom-text-button" onClick={() => selectStudent(r.student)}>
+                                Review {s.name.split(" ")[0]}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.li>
+                    );
+                  })}
+                </AnimatePresence>
+              </ul>
+            </div>
+          </motion.section>
+        ))}
+      </AnimatePresence>
+      {pending.length === 0 && (
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ ...enter, delay: 0.15 }}>
+          No pending requests.
+        </motion.p>
+      )}
     </div>
   );
 }

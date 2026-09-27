@@ -15,6 +15,7 @@ import { useAppState, useStore } from "./store";
 
 export * from "../../../shared/data";
 export { KitProvider, useAppState, useStore } from "./store";
+export { collapse, easeOut, enter, exit, indicator, instant, move } from "./motion";
 
 /** A student record with this session's plan edits applied. */
 function live(s: Student, planned: Record<string, string[]>, status: Record<string, Student["planStatus"]>): Student {

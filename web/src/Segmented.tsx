@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useId, useRef, type KeyboardEvent } from "react";
+import { indicator } from "./kit";
 
 type Option<T extends string> = { id: T; label: string };
 
@@ -41,7 +42,7 @@ export function Segmented<T extends string>(props: {
             onClick={() => onChange(o.id)}
             onKeyDown={(e) => onKeyDown(e, i)}
           >
-            {checked && <motion.span layoutId={layoutId} className="vbg-custom-segmented-thumb" transition={{ type: "spring", bounce: 0, duration: 0.3 }} />}
+            {checked && <motion.span layoutId={layoutId} className="vbg-custom-segmented-thumb" transition={indicator} />}
             <span className="vbg-custom-segmented-label">{o.label}</span>
           </button>
         );

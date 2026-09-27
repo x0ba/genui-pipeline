@@ -4,6 +4,7 @@ import type { PipelineEvent } from "../../../shared/events";
 import type { Persona } from "../../../shared/personas";
 import type { ServeContext, Spec } from "../../../shared/spec";
 import type { Bootstrap, SpecState } from "../api";
+import { easeOut, enter, indicator } from "../kit";
 import { Segmented } from "../Segmented";
 
 const DEVICES = [
@@ -89,7 +90,8 @@ export function PipelinePanel(props: {
     );
 
   return (
-    <aside className="vbg-custom-panel" aria-label="Pipeline">
+    // layoutScroll: timeline entries measure themselves against the panel's own scroll.
+    <motion.aside layoutScroll className="vbg-custom-panel" aria-label="Pipeline">
       <header className="vbg-custom-panel-head">
         <h2 className="vbg-heading-20">Pipeline</h2>
         <div className="vbg-custom-panel-head-actions">
@@ -149,7 +151,7 @@ export function PipelinePanel(props: {
       <nav className="vbg-custom-tabs vbg-custom-panel-tabs" aria-label="Pipeline sections">
         {(["activity", "spec", "library"] as const).map((t) => (
           <button key={t} type="button" aria-current={tab === t} onClick={() => setTab(t)}>
-            {tab === t && <motion.span layoutId="panel-tab" className="vbg-custom-tab-underline" />}
+            {tab === t && <motion.span layoutId="panel-tab" className="vbg-custom-tab-underline" transition={indicator} />}
             {t === "activity" ? "Activity" : t === "spec" ? "Spec" : "Library"}
           </button>
         ))}
@@ -160,7 +162,8 @@ export function PipelinePanel(props: {
           <ol className="vbg-custom-timeline">
             <AnimatePresence initial={false}>
               {entries.map((entry) => (
-                <motion.li key={entry.key} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
+                // Position only: running cards grow as Claude works, and scaling them would stretch their text.
+                <motion.li key={entry.key} layout="position" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0, transition: enter }}>
                   {entry.node === "run" ? <RunCard run={entry.run} /> : <EventCard event={entry.event} />}
                 </motion.li>
               ))}
@@ -171,7 +174,7 @@ export function PipelinePanel(props: {
         {tab === "spec" && props.specState && <SpecTab specState={props.specState} loadVersion={props.loadVersion} />}
         {tab === "library" && props.specState && <LibraryTab specState={props.specState} />}
       </div>
-    </aside>
+    </motion.aside>
   );
 }
 
@@ -212,7 +215,7 @@ function EventCard({ event: e }: { event: PipelineEvent }) {
               <div key={id} role="listitem" className="vbg-custom-prob" data-chosen={id === d.view || undefined}>
                 <span>{id === "none-of-these" ? "None of these" : title(id)}</span>
                 <span className="vbg-custom-prob-track">
-                  <motion.span initial={{ width: 0 }} animate={{ width: `${p * 100}%` }} />
+                  <motion.span initial={{ scaleX: 0 }} animate={{ scaleX: p }} transition={{ duration: 0.5, ease: easeOut }} />
                 </span>
                 <span className="vbg-numeric">{Math.round(p * 100)}%</span>
               </div>

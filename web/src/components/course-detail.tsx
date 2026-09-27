@@ -89,7 +89,9 @@ export default function CourseDetail({ props }: Props) {
   const order = [props.emphasis ?? "overview", ...Object.keys(blocks).filter((k) => k !== props.emphasis)] as (keyof typeof blocks)[];
 
   return (
-    <article className="vbg-custom-stack-4">
+    // Keyed by course: picking another course swaps the detail at once, and only
+    // a change of emphasis on the same course reorders its sections.
+    <article key={course.code} className="vbg-custom-stack-4">
       <header>
         <h3 className="vbg-heading-20">
           {course.code} {course.title}
@@ -99,7 +101,7 @@ export default function CourseDetail({ props }: Props) {
         </p>
       </header>
       {order.map((key) => (
-        <motion.section layout key={key} transition={{ type: "spring", stiffness: 400, damping: 40 }}>
+        <motion.section layout="position" key={key}>
           {blocks[key]}
         </motion.section>
       ))}

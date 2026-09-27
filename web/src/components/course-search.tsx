@@ -1,8 +1,9 @@
 import { motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   courses,
   fmtMeeting,
+  instant,
   overlaps,
   requirementStatus,
   sections as allSections,
@@ -31,6 +32,13 @@ export default function CourseSearch({ props }: Props) {
   const plan = usePlan();
   const { course: selected, selectCourse } = useSelection();
   const [text, setText] = useState("");
+  // Results filtered by typing snap into place; reordering by Jev's props glides.
+  const typedRef = useRef(text);
+  const typing = typedRef.current !== text;
+  useEffect(() => {
+    typedRef.current = text;
+  });
+  const snap = typing ? { transition: instant } : {};
   const student = subject.kind === "student" ? subject.student : null;
 
   const results = useMemo(() => {
@@ -117,6 +125,7 @@ export default function CourseSearch({ props }: Props) {
                   {items.map((r) => (
                     <motion.tr
                       layout="position"
+                      {...snap}
                       key={r.course.code}
                       aria-selected={selected?.code === r.course.code}
                       className="vbg-custom-clickable"
@@ -135,7 +144,7 @@ export default function CourseSearch({ props }: Props) {
           ) : (
             <ul className={representation === "cards" ? "vbg-custom-cards" : "vbg-custom-rows"}>
               {items.slice(0, 40).map((r) => (
-                <motion.li layout key={r.course.code} layoutId={`course-${r.course.code}`} transition={{ type: "spring", stiffness: 420, damping: 40 }}>
+                <motion.li layout="position" {...snap} key={r.course.code} layoutId={`course-${r.course.code}`}>
                   <button
                     type="button"
                     className="vbg-custom-result"

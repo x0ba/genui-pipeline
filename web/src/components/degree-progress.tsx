@@ -17,7 +17,7 @@ export default function DegreeProgress({ props }: Props) {
     return (
       <div className="vbg-custom-stack-6">
         {status.map((r) => (
-          <motion.section layout key={r.id} className="vbg-custom-stack-2">
+          <motion.section layout="position" key={r.id} className="vbg-custom-stack-2">
             <h3 className="vbg-heading-16">
               {r.title}
               <span className="vbg-meta">
@@ -55,7 +55,7 @@ export default function DegreeProgress({ props }: Props) {
         const planned = r.planned.length / r.needed;
         const upcoming = next(r);
         return (
-          <motion.div layout key={r.id} className="vbg-custom-progress-row" role="listitem">
+          <motion.div layout="position" key={r.id} className="vbg-custom-progress-row" role="listitem">
             <span className="vbg-custom-progress-label">{r.title}</span>
             <span className="vbg-custom-progress-track" aria-hidden>
               <motion.span className="vbg-custom-progress-done" initial={false} animate={{ width: `${done * 100}%` }} />

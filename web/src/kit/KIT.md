@@ -44,6 +44,7 @@ Static data and pure helpers:
 - `scheduleConflicts(student, sections?)` → `{ a, b, label }[]`; `overlaps(meetingA, meetingB)`.
 - `risk(student)` → `{ credits, remainingCourses, termsLeft, flags: string[], score }`.
 - `creditsOf(codes)`, `plannedSections(student)`, `timeOfDay(meeting)`.
+- Motion: `move` (the default spring), `enter`, `exit`, `instant`, `easeOut`, and `collapse` (spread on a `motion.*` row inside `AnimatePresence`). See Design rules.
 - Formatting: `fmtTime(minutes)`, `fmtMeeting(meeting)`, `fmtPct(0..1)`, `plural(n, word)`.
 - `scaleLinear([d0, d1], [r0, r1])` for SVG geometry.
 - `heat(t)` (0..1) → `{ step, fill, ink }`: a colour on the sequential ramp for heatmaps and filled cells, and the text colour that stays legible on it. See Contrast.
@@ -68,7 +69,7 @@ The app follows Vercel's design guidance, using the published `vercel-brand.css`
 - Spacing tokens: `var(--vbg-space-1)` … `var(--vbg-space-16)`. Radii: `var(--vbg-radius-small)`, `var(--vbg-radius)`. Surfaces: `var(--vbg-surface-primary)`, `var(--vbg-surface-secondary)`. Text: `var(--vbg-text-primary)`, `var(--vbg-text-secondary)`. Borders: `var(--vbg-border-subtle|default|strong)`.
 - Layout helpers you may use: `vbg-custom-stack-2`, `vbg-custom-stack-4`, `vbg-custom-stack-6` (vertical rhythm), `vbg-custom-actions` (a row of buttons), `vbg-custom-text-button` (quiet text button), `vbg-button` (primary button), `vbg-custom-plain` (unstyled list). Inline `style` is fine for geometry.
 - No gradients, glows, shadows, pills, badges, icon tiles, emoji or decorative borders. No cards inside cards. Both light and dark themes must work, so only use the tokens above, never raw hex colours.
-- Motion: `motion.*` elements with `layout` so state changes animate into place. No decorative or looping animation.
+- Motion: `motion.*` elements with `layout="position"` so state changes glide into place (plain `layout` also animates size by scaling, which stretches text). Do not set `transition` for layout: the shell supplies one spring for every moving piece. For things arriving or leaving inside `AnimatePresence`, use the kit's `enter` and `exit` transitions, start from `opacity: 0` with at most `y: 8` or `scale: 0.96` (never `scale: 0`), and spread `collapse` on rows that should open and close in place (the row element must have no padding or border of its own; put them on a child). Nothing animates in response to typing: pass `transition={instant}` for changes caused by a text input. Animate bars with `scaleX` and a left `transformOrigin` rather than `width` where you can. No decorative or looping animation.
 - Must fit the slot's width (it may be a narrow side column or a phone). Give SVG a `viewBox`, `width="100%"` and `style={{ maxWidth: naturalWidth }}` so it shrinks to fit but never scales text above its natural size. Allow horizontal scroll only for wide tables or diagrams (`style={{ overflowX: "auto" }}`).
 
 ## Contrast

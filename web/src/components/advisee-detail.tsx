@@ -92,7 +92,9 @@ export default function AdviseeDetail({ props }: Props) {
   const order = [props.emphasis ?? "plan", ...Object.keys(blocks).filter((k) => k !== props.emphasis)] as (keyof typeof blocks)[];
 
   return (
-    <article className="vbg-custom-stack-4">
+    // Keyed by student: picking another advisee swaps the detail at once, and only
+    // a change of emphasis on the same advisee reorders its sections.
+    <article key={student.id} className="vbg-custom-stack-4">
       <header>
         <h3 className="vbg-heading-20">{student.name}</h3>
         <p className="vbg-meta">
@@ -100,7 +102,7 @@ export default function AdviseeDetail({ props }: Props) {
         </p>
       </header>
       {order.map((k) => (
-        <motion.section layout key={k}>
+        <motion.section layout="position" key={k}>
           {blocks[k]}
         </motion.section>
       ))}

@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
-import { courseByCode, DAY_NAMES, DAYS, fmtTime, overlaps, usePlan, useSelection, useSubject, type Day, type Meeting } from "@kit";
+import { AnimatePresence, motion } from "motion/react";
+import { courseByCode, DAY_NAMES, DAYS, enter, exit, fmtTime, overlaps, usePlan, useSelection, useSubject, type Day, type Meeting } from "@kit";
 
 type Props = { props: Record<string, string> };
 type Item = { key: string; label: string; detail: string; meeting: Meeting; kind: "class" | "blocked"; conflict: boolean; course?: string };
@@ -7,7 +7,6 @@ type Item = { key: string; label: string; detail: string; meeting: Meeting; kind
 const START = 8 * 60;
 const END = 20 * 60;
 const HOURS = Array.from({ length: (END - START) / 60 + 1 }, (_, i) => START + i * 60);
-const spring = { type: "spring", stiffness: 380, damping: 38 } as const;
 
 export default function WeekCalendar({ props }: Props) {
   const subject = useSubject();
@@ -65,9 +64,8 @@ export default function WeekCalendar({ props }: Props) {
               <ul>
                 {perDay(day).map((item) => (
                   <motion.li
-                    layout
+                    layout="position"
                     layoutId={`${item.key}-${day}`}
-                    transition={spring}
                     key={item.key}
                     data-kind={item.kind}
                     data-state={item.conflict ? "error" : undefined}
@@ -111,26 +109,32 @@ export default function WeekCalendar({ props }: Props) {
               {HOURS.map((h) => (
                 <span key={h} className="vbg-custom-week-line" style={{ top: `${pct(h)}%` }} aria-hidden />
               ))}
-              {perDay(day).map((item) => (
-                <motion.button
-                  type="button"
-                  layout
-                  layoutId={`${item.key}-${day}`}
-                  transition={spring}
-                  key={item.key}
-                  role="cell"
-                  className="vbg-custom-week-item"
-                  data-kind={item.kind}
-                  data-state={item.conflict ? "error" : undefined}
-                  style={{ top: `${pct(item.meeting.start)}%`, height: `${pct(item.meeting.end) - pct(item.meeting.start)}%` }}
-                  onClick={() => item.course && selectCourse(item.course)}
-                  disabled={!item.course}
-                  aria-label={`${item.label}, ${fmtTime(item.meeting.start)} to ${fmtTime(item.meeting.end)}${item.conflict ? ", conflict" : ""}`}
-                >
-                  <strong>{item.label}</strong>
-                  <span>{fmtTime(item.meeting.start)}</span>
-                </motion.button>
-              ))}
+              {/* Classes added or dropped elsewhere in the view settle into or out of the week.
+                  Position only when switching to the agenda: a block reshaped into a row would stretch its text. */}
+              <AnimatePresence initial={false}>
+                {perDay(day).map((item) => (
+                  <motion.button
+                    type="button"
+                    layout="position"
+                    layoutId={`${item.key}-${day}`}
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1, transition: enter }}
+                    exit={{ opacity: 0, scale: 0.96, transition: exit }}
+                    key={item.key}
+                    role="cell"
+                    className="vbg-custom-week-item"
+                    data-kind={item.kind}
+                    data-state={item.conflict ? "error" : undefined}
+                    style={{ top: `${pct(item.meeting.start)}%`, height: `${pct(item.meeting.end) - pct(item.meeting.start)}%` }}
+                    onClick={() => item.course && selectCourse(item.course)}
+                    disabled={!item.course}
+                    aria-label={`${item.label}, ${fmtTime(item.meeting.start)} to ${fmtTime(item.meeting.end)}${item.conflict ? ", conflict" : ""}`}
+                  >
+                    <strong>{item.label}</strong>
+                    <span>{fmtTime(item.meeting.start)}</span>
+                  </motion.button>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
         ))}

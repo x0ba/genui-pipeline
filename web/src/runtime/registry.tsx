@@ -39,7 +39,9 @@ export function componentFor(def: ComponentDef): SlotComponent | null {
   const key = `${def.id}@${def.origin?.createdAt ?? ""}`;
   if (!generated.has(key)) {
     // Numeric cache-buster: a '.' in the query would confuse Vite's language detection.
-    const url = `/@fs${__GENERATED_DIR__}/${def.id}.tsx?v=${Date.parse(def.origin?.createdAt ?? "") || 0}`;
+    // `t=`, not `v=`: Vite serves `v=` URLs as immutable, so the browser would keep a
+    // module that imports a React bundle from before Vite last re-optimized deps.
+    const url = `/@fs${__GENERATED_DIR__}/${def.id}.tsx?t=${Date.parse(def.origin?.createdAt ?? "") || 0}`;
     generated.set(key, lazy(() => import(/* @vite-ignore */ url)));
   }
   return generated.get(key)!;

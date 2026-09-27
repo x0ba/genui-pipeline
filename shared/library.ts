@@ -39,7 +39,7 @@ export const BUILTIN_COMPONENTS: ComponentDef[] = [
         options: {
           code: "Ordered by course code",
           rating: "Highest instructor rating first",
-          "open-seats": "Most open seats first, to avoid waitlists",
+          "open-seats": "Most open seats first; full sections still appear, last",
           fit: "Sections that fit the person's free time and unmet requirements first",
         },
         default: "code",
@@ -53,6 +53,15 @@ export const BUILTIN_COMPONENTS: ComponentDef[] = [
           afternoon: "Only sections that start between noon and 5pm",
           evening: "Only sections that start at 5pm or later",
           "fits-schedule": "Only sections that avoid the person's blocked times and planned classes",
+        },
+        default: "any",
+      },
+      seats: {
+        label: "Seat availability",
+        atlas: "faceted-search.facetSet",
+        options: {
+          any: "Show every section, full or not. Right whenever the request does not ask about seats or availability",
+          open: "Hide full and waitlisted sections. Only when the request asks to see just courses that are still available, open or not full; a request for an order, such as most open seats first, is not this",
         },
         default: "any",
       },

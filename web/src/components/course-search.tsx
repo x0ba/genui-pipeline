@@ -49,6 +49,7 @@ export default function CourseSearch({ props }: Props) {
       const busy = busyFor(course.code);
       const secs = allSections.filter((s) => {
         if (s.course !== course.code) return false;
+        if (props.seats === "open" && s.enrolled >= s.capacity) return false;
         if (props.timeFilter === "fits-schedule") return !busy.some((m) => overlaps(s.meeting, m));
         if (props.timeFilter && props.timeFilter !== "any") return timeOfDay(s.meeting) === props.timeFilter;
         return true;
@@ -74,7 +75,7 @@ export default function CourseSearch({ props }: Props) {
       fit: (a, b) => b.fit - a.fit,
     };
     return out.sort(rank[props.ranking] ?? rank.code);
-  }, [student, plan.sections, text, props.scope, props.timeFilter, props.ranking, props.grouping]);
+  }, [student, plan.sections, text, props.scope, props.timeFilter, props.seats, props.ranking, props.grouping]);
 
   const groups = useMemo(() => {
     const map = new Map<string, Result[]>();
@@ -95,6 +96,7 @@ export default function CourseSearch({ props }: Props) {
       <p className="vbg-meta" aria-live="polite">
         {results.length} {results.length === 1 ? "course" : "courses"}
         {props.timeFilter && props.timeFilter !== "any" ? `, ${props.timeFilter === "fits-schedule" ? "sections that fit your week" : `${props.timeFilter} sections`}` : ""}
+        {props.seats === "open" ? ", open seats only" : ""}
       </p>
       {groups.map(([group, items]) => (
         <section key={group || "all"} className="vbg-custom-result-group">
@@ -158,7 +160,7 @@ export default function CourseSearch({ props }: Props) {
           )}
         </section>
       ))}
-      {results.length === 0 && <p>No courses match. Try another time filter or search.</p>}
+      {results.length === 0 && <p>No courses match. Try another filter or search.</p>}
     </div>
   );
 }

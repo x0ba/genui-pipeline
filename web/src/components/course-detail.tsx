@@ -71,14 +71,17 @@ export default function CourseDetail({ props }: Props) {
     outcomes: (
       <div className="vbg-custom-stack-2">
         <p className="vbg-meta">Grades over the last three terms. Instructor rating {course.rating.toFixed(1)} of 5.</p>
-        <div className="vbg-custom-grades" role="img" aria-label={Object.entries(course.grades).map(([g, v]) => `${g} ${fmtPct(v)}`).join(", ")}>
+        <ol className="vbg-bar-list vbg-custom-grades" aria-label={`Grade distribution for ${course.code}`}>
           {Object.entries(course.grades).map(([grade, share]) => (
-            <div key={grade} style={{ flexGrow: share }} className="vbg-custom-grade">
-              <span>{grade}</span>
-              <span className="vbg-meta">{fmtPct(share)}</span>
-            </div>
+            <li key={grade} className="vbg-bar">
+              <span className="vbg-bar-label">{grade}</span>
+              <span className="vbg-bar-value vbg-numeric">{fmtPct(share)}</span>
+              <span className="vbg-bar-track">
+                <span className="vbg-bar-fill" style={{ width: `${share * 100}%` }} />
+              </span>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     ),
   } as const;

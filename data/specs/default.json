@@ -13,7 +13,7 @@
       "layout": "main-aside",
       "slots": [
         { "id": "notice", "component": "deadline-banner", "region": "top", "props": {}, "adaptive": ["tone"] },
-        { "id": "results", "component": "course-search", "region": "main", "props": {}, "adaptive": ["timeFilter", "scope", "ranking"] },
+        { "id": "results", "component": "course-search", "region": "main", "props": {}, "adaptive": ["timeFilter", "seats", "scope", "ranking"] },
         { "id": "detail", "component": "course-detail", "region": "aside", "props": {}, "adaptive": ["emphasis"] }
       ]
     },

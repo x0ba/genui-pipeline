@@ -1,4 +1,4 @@
-import type { Decision } from "./spec";
+import type { Decision, Unmatched } from "./spec";
 
 // Everything the pipeline does is an event. The inspector renders this stream.
 export type PipelineEvent = { id: string; at: string; userId: string } & (
@@ -14,7 +14,7 @@ export type PipelineEvent = { id: string; at: string; userId: string } & (
     }
   | { type: "jev.serve"; decision: Decision }
   | { type: "jev.error"; message: string }
-  | { type: "gap.flagged"; request: string; probability: number; kind: string; decisionId: string }
+  | { type: "gap.flagged"; request: string; probability: number; kind: string; unmatched?: Unmatched[]; decisionId: string }
   | { type: "claude.start"; runId: string; kind: "personalize" | "extend"; model: string; request?: string }
   | { type: "claude.text"; runId: string; text: string }
   | { type: "claude.tool"; runId: string; toolUseId: string; name: string; input: string }

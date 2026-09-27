@@ -243,7 +243,8 @@ function EventCard({ event: e }: { event: PipelineEvent }) {
             <span className="vbg-meta">{time}</span>
           </p>
           <p data-state="warning">
-            {Math.round(e.probability * 100)}% that no view serves “{e.request}”. Likely missing: {e.kind.replace(/-/g, " ")}.
+            {Math.round(e.probability * 100)}% that no view serves “{e.request}”. Likely missing: {e.kind.replace(/-/g, " ")}
+            {e.unmatched?.length ? ` (${e.unmatched.map((u) => `${u.component}.${u.prop}`).join(", ")} has no matching option)` : ""}.
           </p>
         </article>
       );

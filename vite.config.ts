@@ -4,7 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   root: "web",
-  plugins: [react()],
+  // Generated components are never edited in place, and Fast Refresh's self-import
+  // would load a second instance next to the runtime `?import` one.
+  plugins: [react({ exclude: [/\/node_modules\//, /\/data\/runtime\//] })],
   resolve: { alias: { "@kit": resolve(import.meta.dirname, "web/src/kit/index.ts") } },
   define: {
     // Generated components live outside the Vite root and are imported at runtime.

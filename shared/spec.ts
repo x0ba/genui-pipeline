@@ -156,6 +156,16 @@ export function resolveProps(
   return out;
 }
 
+/** A prop of the served view whose options all miss what the request asks for. */
+export type Unmatched = {
+  slotId: string;
+  component: string;
+  prop: string;
+  label: string;
+  options: string[];
+  probability: number;
+};
+
 // What Jev decided for one request, returned to the client and logged to the pipeline.
 export type Decision = {
   id: string;
@@ -169,7 +179,7 @@ export type Decision = {
   layout: Layout;
   props: Record<string, Record<string, string>>; // slotId -> prop -> value
   propConfidence: Record<string, Record<string, number>>;
-  gap: { flagged: boolean; probability: number; kind: string } | null;
+  gap: { flagged: boolean; probability: number; kind: string; unmatched: Unmatched[] } | null;
   latencyMs: number;
   inputTokens: number;
   costUsd: number;

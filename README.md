@@ -25,6 +25,7 @@ The demo app is a university course planner with three people to switch between:
   </tr>
 </table>
 
+- Jev treats a close match as an exact one. I asked for a pie chart of students with GPAs from 0–1, 1–2, 2–3 and 3–4, and Claude built that chart. When I then asked for GPAs from 0–2 and 2–4, Jev showed the same four-range chart again. Every setting Jev picks has to be one of the options the spec lists, so it rounded my request to the nearest one, and the one check for missing features looked at the app as a whole, where a GPA pie chart already existed. The fix was to ask Jev, for each setting of the chart it picks, whether the request names a value that none of the options gives. If it does, Jev flags the request, and Claude adds the missing option to the existing component instead of building a duplicate.
 
 ## How it works
 
@@ -54,8 +55,9 @@ The shared default is `data/specs/default.json`. It has four views: `catalog`, `
 - `gap_kind`: what kind of thing is missing, if anything.
 - `layout`: `main-aside`, `stack`, or `columns`.
 - One question per adaptive prop in every view. Jev answers them all in the same call, and the server keeps only the answers for the view Jev picked. That saves a second round trip.
+- For each adaptive prop in a `main` slot, a yes-or-no question: does the request ask for a value of this prop, such as other ranges, groups or cut-offs, that none of its options gives? A prop question always picks the nearest option, so without this a view that fits but lacks the exact option, such as GPA ranges of 0–2 and 2–4 when the chart only has one-point and half-point ranges, would be served silently.
 
-Every answer is one of the options the spec lists, so Jev cannot produce a screen the renderer cannot draw. If the gap probability is 0.5 or higher, the server flags the request and shows the closest view while the person decides whether to have Claude build the missing part.
+Every answer is one of the options the spec lists, so Jev cannot produce a screen the renderer cannot draw. If the gap probability is 0.5 or higher, or any prop of the chosen view has no matching option, the server flags the request and shows the closest view while the person decides whether to have Claude build the missing part. For an unmatched prop on a generated component, Claude rewrites that component under the same id with the missing options added. `write_component` rejects a rewrite that drops any role, prop or option, because other specs may use them.
 
 ### Deciding whether to personalize
 

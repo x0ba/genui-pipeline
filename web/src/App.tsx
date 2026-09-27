@@ -1,14 +1,14 @@
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { PipelineEvent } from "../../shared/events";
-import { viewsFor, type Decision, type ServeContext, type Spec } from "../../shared/spec";
+import { viewsFor, type Decision, type ServeContext, type Spec, type Unmatched } from "../../shared/spec";
 import { api, useEvents, type Bootstrap, type SpecState } from "./api";
 import { KitProvider, useAppState } from "./kit";
 import { PipelinePanel } from "./pipeline/PipelinePanel";
 import { Renderer } from "./runtime/Renderer";
 import { Segmented } from "./Segmented";
 
-type Gap = { request: string; kind: string; probability: number };
+type Gap = { request: string; kind: string; probability: number; unmatched: Unmatched[] };
 
 function slotKeys(spec: Spec) {
   return new Map(spec.views.flatMap((v) => v.slots.map((s) => [`${v.id}/${s.id}`, s.component] as const)));
@@ -68,7 +68,7 @@ export function App() {
         setDecision(d);
         setViewId(d.view);
         if (!opts.forceView) setLastRequest(text);
-        setGap(d.gap?.flagged ? { request: d.request, kind: d.gap.kind, probability: d.gap.probability } : null);
+        setGap(d.gap?.flagged ? { request: d.request, kind: d.gap.kind, probability: d.gap.probability, unmatched: d.gap.unmatched ?? [] } : null);
       } catch (e) {
         if (mine !== seq.current) return;
         setError(`Jev could not serve this request: ${(e as Error).message}`);
@@ -159,7 +159,7 @@ export function App() {
   const extend = async () => {
     if (!gap) return;
     try {
-      await api.extend(userId, gap.request, gap.kind);
+      await api.extend(userId, gap.request, gap.kind, gap.unmatched);
     } catch (err) {
       setError((err as Error).message);
     }
@@ -291,7 +291,10 @@ export function App() {
                     <>
                       <p>
                         <strong>Not in this interface yet.</strong> Jev flagged “{gap.request}” as outside the spec ({Math.round(gap.probability * 100)}%,{" "}
-                        {gap.kind.replace(/-/g, " ")}). Showing the closest view instead.
+                        {gap.kind.replace(/-/g, " ")}).{" "}
+                        {gap.unmatched.length
+                          ? `No option for ${gap.unmatched.map((u) => u.label.toLowerCase()).join(" or ")} matches it; showing the closest one instead.`
+                          : "Showing the closest view instead."}
                       </p>
                       <div className="vbg-custom-actions">
                         <button type="button" className="vbg-button" onClick={extend} disabled={Boolean(runs.active)}>

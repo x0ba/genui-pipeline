@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { PipelineEvent } from "../../shared/events";
 import type { Persona } from "../../shared/personas";
-import type { ComponentDef, Decision, ServeContext, Spec } from "../../shared/spec";
+import type { ComponentDef, Decision, ServeContext, Spec, Unmatched } from "../../shared/spec";
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(`/api${path}`, {
@@ -37,7 +37,8 @@ export const api = {
   serve: (userId: string, body: { request: string; context: ServeContext; currentView?: string; forceView?: string }) =>
     call<Decision>(`/users/${userId}/serve`, body),
   personalize: (userId: string, force = false) => call<GateResult>(`/users/${userId}/personalize`, { force }),
-  extend: (userId: string, request: string, gapKind: string) => call<{ runId: string | null }>(`/users/${userId}/extend`, { request, gapKind }),
+  extend: (userId: string, request: string, gapKind: string, unmatched: Unmatched[]) =>
+    call<{ runId: string | null }>(`/users/${userId}/extend`, { request, gapKind, unmatched }),
   reset: (userId: string) => call<{ ok: boolean }>(`/users/${userId}/reset`, {}),
   resetAll: () => call<{ ok: boolean }>("/reset", {}),
 };

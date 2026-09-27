@@ -3,7 +3,7 @@ import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import type { Persona } from "../../shared/personas";
-import { checkPropDefs, checkSpec, ComponentDef, PropDef, Spec, View, viewsFor } from "../../shared/spec";
+import { checkPropDefs, checkSpec, ComponentDef, PropDef, Spec, View, viewsFor, type Unmatched } from "../../shared/spec";
 import { getAtlasEntry, searchAtlas } from "../atlas";
 import { emit } from "../events";
 import { addGenerated, COMPONENT_DIR, getLibrary, getSpec, ROOT, saveSpec, STAGING_DIR } from "../store";
@@ -180,7 +180,7 @@ const PIPELINE = `How the pipeline works:
 - Most users get the shared default spec. Specs exist per user only when the default does not serve them.
 
 Spec rules:
-- \`purpose\`: one or two literal sentences naming the requests a view answers. Purposes must be clearly distinct, because Jev routes requests by them.
+- \`purpose\`: one or two literal sentences naming the requests a view answers. Purposes must be clearly distinct, because Jev routes requests by them. Name only requests the view's \`main\` slot answers; do not claim requests another view's main content already answers, such as plain course lists for a chart view with a list beside it.
 - Fixed props (\`props\`) encode stable preferences. Make a prop adaptive only when the right option depends on the request, the device or the registration phase. Every adaptive prop costs one Jev question per request.
 - Regions: \`top\` spans the full width above the rest (key numbers, notices), \`main\` is the primary column, \`aside\` is the secondary column. Layouts: 'main-aside' (wide main + narrow aside), 'stack' (one column), 'columns' (two equal columns).
 - Use only components whose roles include the user's role. View ids and slot ids are kebab-case and unique within their scope.
@@ -278,7 +278,32 @@ const PatchSpec = {
   summary: z.string().describe("One sentence for the changelog"),
 };
 
-export function extend(persona: Persona, request: string, gapKind: string) {
+/** What a rewrite of an installed component removes: roles, props or prop options. */
+function droppedFrom(prev: ComponentDef, next: { roles: string[]; props: Record<string, PropDef> }) {
+  return [
+    ...prev.roles.filter((r) => !next.roles.includes(r)).map((r) => `role '${r}'`),
+    ...Object.entries(prev.props).flatMap(([key, p]) =>
+      !next.props[key]
+        ? [`prop '${key}'`]
+        : Object.keys(p.options)
+            .filter((o) => !(o in next.props[key]!.options))
+            .map((o) => `option '${key}.${o}'`),
+    ),
+  ];
+}
+
+function describeUnmatched(unmatched: Unmatched[]) {
+  const library = getLibrary();
+  return unmatched
+    .map((u) => {
+      const def = library[u.component];
+      const options = Object.entries(def?.props[u.prop]?.options ?? {}).map(([id, d]) => `    - ${id}: ${d}`);
+      return `- "${u.label}" (prop \`${u.prop}\`) of ${def?.source ?? "unknown"} component \`${u.component}\` in slot \`${u.slotId}\`, options:\n${options.join("\n")}`;
+    })
+    .join("\n");
+}
+
+export function extend(persona: Persona, request: string, gapKind: string, unmatched: Unmatched[] = []) {
   let patched = false;
   let attempt = 0;
   const role = persona.subject.kind;
@@ -308,7 +333,13 @@ export function extend(persona: Persona, request: string, gapKind: string) {
       WriteComponent,
       async (input) => {
         const library = getLibrary();
-        if (library[input.id]?.source === "builtin") return fail(`'${input.id}' is a builtin id; choose another`);
+        const existing = library[input.id];
+        if (existing?.source === "builtin") return fail(`'${input.id}' is a builtin id; choose another`);
+        if (existing) {
+          const dropped = droppedFrom(existing, input);
+          if (dropped.length)
+            return fail(`'${input.id}' is already installed and other specs may use it. A rewrite must keep everything it had; missing: ${dropped.join(", ")}`);
+        }
         const def: ComponentDef = {
           id: input.id,
           title: input.title,
@@ -389,11 +420,19 @@ export function extend(persona: Persona, request: string, gapKind: string) {
 
 ${PIPELINE}
 
-First decide: can existing library components, arranged in a new or changed view, answer the request? If so, only patch the spec. Check every condition in the request against the components' prop options: a component only filters and sorts by the options it lists, and builtin components cannot be edited. If the request needs something no component shows or offers, such as a new visualization, diagram, data view, or a filter or sort order a list lacks, write a new component and then add it to the spec. For a missing filter, expose it as a prop whose options include the unfiltered case, so the component serves other requests too.
+First decide: can existing library components, arranged in a new or changed view, answer the request? If so, only patch the spec. Check every condition and every value in the request against the components' prop options: a component only filters, sorts, groups and bins by the options it lists, and builtin components cannot be edited. If the request needs something no component shows or offers, such as a new visualization, diagram, data view, or a filter or sort order a list lacks, write a new component and then add it to the spec. For a missing filter, expose it as a prop whose options include the unfiltered case, so the component serves other requests too.
+
+When Jev reports that a view fits but one of its settings has no option for what the request asks, such as GPA ranges of 0–2 and 2–4 when the options are one-point and half-point ranges:
+- If that component is generated, extend it in place: read_component, then write_component with the same id, keeping every prop, option and role it already has, because other users' specs use them, and adding the options the request needs. Then make the setting adaptive in the view with submit_spec_patch if it is fixed there. Do not add a second component that duplicates it.
+- If it is a builtin, write a new component that covers the request and add it to a view.
+
+Options Jev can choose correctly:
+- When a request names particular values, such as ranges, cut-offs, groups, periods or counts, the options must include exactly those values, and also the nearby variants people are likely to ask for next, such as other common splits, so the next similar request is served without another run. When the values people ask for can vary, as with ranges and cut-offs, prefer options that cover a family of splits (two, four or eight equal ranges; above and below common cut-offs) over one option per past request.
+- Describe each option by exactly what it shows, naming its values, for example "Two ranges: 0–2 and 2–4". Never write that an option is right for requests it does not literally serve, such as "right unless the request asks for finer ranges": Jev rounds a request to the option whose description claims it, and then cannot tell that the request needed something else.
 
 Writing a component:
 - Read kit_reference first. Read one similar existing component with read_component for idiom (demand-chart for SVG charts, advisee-table for tables).
-- Pick the Pattern Atlas entry it instantiates (atlas_search, atlas_get). Expose 1 to 3 of that entry's sub-dimensions as props with 2 to 4 literal options each, so Jev can adapt it and other users can reuse it.
+- Pick the Pattern Atlas entry it instantiates (atlas_search, atlas_get). Expose 1 to 3 of that entry's sub-dimensions as props with 2 to 6 literal options each, so Jev can adapt it and other users can reuse it.
 - Compute from the subject's data through the kit hooks. Never hard-code this user's values; the component joins a shared library.
 - Legibility is enforced. Follow the kit reference's Contrast section: text on a filled mark uses heat(t) or the contrast surface pair, never a series colour or a translucent fill.
 - write_component renders every prop option with every eligible user's data, then renders it in a real browser in light and dark themes and measures every piece of text against what is painted behind it. If it returns errors, fix the code and call it again.
@@ -403,7 +442,7 @@ Patching the spec: add a view whose purpose literally covers requests like the f
 When submit_spec_patch succeeds, reply with one sentence.`,
     prompt: `Flagged request from user "${persona.id}" (${persona.name}, ${role}): "${request}"
 Jev's guess at what is missing: ${gapKind}.
-
+${unmatched.length ? `The view Jev served fits, but no option of these settings matches the request:\n${describeUnmatched(unmatched)}\n` : ""}
 Their current spec (version ${spec.version}${spec.userId ? "" : ", the shared default"}):
 ${JSON.stringify({ profile: spec.profile, home: spec.home, views: spec.views }, null, 1)}`,
   });

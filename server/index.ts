@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { streamSSE } from "hono/streaming";
 import { personaById, PERSONAS } from "../shared/personas";
-import type { ServeContext } from "../shared/spec";
+import type { ServeContext, Unmatched } from "../shared/spec";
 import { activeRun, CLAUDE_MODEL, extend, personalize } from "./claude/agents";
 import { chromePath } from "./claude/contrast";
 import { clearHistory, emit, recent, subscribe } from "./events";
@@ -74,7 +74,15 @@ app.post("/api/users/:id/serve", async (c) => {
     });
     emit({ type: "jev.serve", userId: p.id, decision });
     if (decision.gap?.flagged)
-      emit({ type: "gap.flagged", userId: p.id, request: decision.request, probability: decision.gap.probability, kind: decision.gap.kind, decisionId: decision.id });
+      emit({
+        type: "gap.flagged",
+        userId: p.id,
+        request: decision.request,
+        probability: decision.gap.probability,
+        kind: decision.gap.kind,
+        unmatched: decision.gap.unmatched,
+        decisionId: decision.id,
+      });
     return c.json(decision);
   } catch (e) {
     emit({ type: "jev.error", userId: p.id, message: (e as Error).message });
@@ -84,8 +92,8 @@ app.post("/api/users/:id/serve", async (c) => {
 
 app.post("/api/users/:id/extend", async (c) => {
   const p = persona(c.req.param("id"));
-  const { request, gapKind } = await c.req.json<{ request: string; gapKind: string }>();
-  extend(p, request, gapKind).catch((e) => emit({ type: "jev.error", userId: p.id, message: `extend failed: ${e.message}` }));
+  const { request, gapKind, unmatched } = await c.req.json<{ request: string; gapKind: string; unmatched?: Unmatched[] }>();
+  extend(p, request, gapKind, unmatched ?? []).catch((e) => emit({ type: "jev.error", userId: p.id, message: `extend failed: ${e.message}` }));
   await Bun.sleep(50);
   return c.json({ runId: activeRun(p.id) });
 });

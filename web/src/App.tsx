@@ -229,12 +229,25 @@ export function App() {
                           Personalize
                         </button>
                         {gateNote && (
-                          <button type="button" className="vbg-custom-text-button" onClick={() => personalize(true)}>
+                          <motion.button
+                            type="button"
+                            className="vbg-custom-text-button"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: enter }}
+                            onClick={() => personalize(true)}
+                          >
                             Personalize anyway
-                          </button>
+                          </motion.button>
                         )}
                       </div>
-                      {gateNote && <p className="vbg-meta">{gateNote}</p>}
+                      {/* Jev's verdict lands a beat after the click; open it in place so the view below does not jump. */}
+                      <AnimatePresence initial={false}>
+                        {gateNote && (
+                          <motion.div key="gate-note" className="vbg-custom-reveal" {...collapse}>
+                            <p className="vbg-meta">{gateNote}</p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </>
                   )}
                 </div>
@@ -308,11 +321,15 @@ export function App() {
               )}
             </AnimatePresence>
 
-            {error && (
-              <p className="vbg-custom-error" data-state="error" role="alert">
-                {error}
-              </p>
-            )}
+            <AnimatePresence initial={false}>
+              {error && (
+                <motion.div key="error" className="vbg-custom-reveal" {...collapse}>
+                  <p className="vbg-custom-error" data-state="error" role="alert">
+                    {error}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {spec && specState && (
               <>

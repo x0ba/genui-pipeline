@@ -91,7 +91,15 @@ export function PipelinePanel(props: {
 
   return (
     // layoutScroll: timeline entries measure themselves against the panel's own scroll.
-    <motion.aside layoutScroll className="vbg-custom-panel" aria-label="Pipeline">
+    // Reopening from the rail slides the panel in from its edge; on page load it is simply there.
+    // toggled is still set during this render, so it tells a reopen apart from a first mount.
+    <motion.aside
+      layoutScroll
+      className="vbg-custom-panel"
+      aria-label="Pipeline"
+      initial={toggled.current ? { opacity: 0, x: 12 } : false}
+      animate={{ opacity: 1, x: 0, transition: enter }}
+    >
       <header className="vbg-custom-panel-head">
         <h2 className="vbg-heading-20">Pipeline</h2>
         <div className="vbg-custom-panel-head-actions">

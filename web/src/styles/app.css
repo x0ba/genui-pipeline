@@ -136,6 +136,7 @@
   margin-bottom: calc(-1 * var(--vbg-custom-reveal-space));
 }
 .vbg-custom-app .vbg-custom-reveal > * {
+  margin-top: 0;
   margin-bottom: var(--vbg-custom-reveal-space);
 }
 
@@ -150,6 +151,7 @@
   border: 1px solid var(--vbg-border-default);
   border-radius: var(--vbg-radius);
   padding: var(--vbg-space-4) var(--vbg-space-5);
+  --vbg-custom-reveal-gap: var(--vbg-space-3);
 }
 .vbg-custom-gap {
   border-color: var(--vbg-color-warning);
@@ -578,6 +580,7 @@
 
 /* ------------------------------------------------ week calendar */
 .vbg-custom-week {
+  position: relative;
   display: grid;
   grid-template-columns: 2.75rem repeat(5, minmax(0, 1fr));
   gap: 0 var(--vbg-space-1);
@@ -612,11 +615,10 @@
 }
 .vbg-custom-week-item {
   position: absolute;
-  left: 3px;
-  right: 3px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-start;
   gap: 0;
   overflow: hidden;
   padding: var(--vbg-space-1) var(--vbg-space-2);
@@ -630,6 +632,57 @@
   border-radius: var(--vbg-radius-small);
   cursor: pointer;
 }
+/* When the name takes the block's height, the time wraps into a second column
+   off to the side and out of sight, rather than being cut in half at the bottom. */
+.vbg-custom-week-text {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.vbg-custom-week-text > * {
+  width: 100%;
+}
+/* A narrow block wraps its name between words rather than cutting it off; only a
+   word too long for the block on its own is shortened. */
+.vbg-custom-week-text span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vbg-custom-week-text .vbg-custom-week-word {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+.vbg-custom-week-item[data-split] {
+  padding-inline: var(--vbg-space-1);
+}
+/* Blocks too short for two lines: name then time on one line. The row is one line
+   tall, so when the name leaves no room the time wraps out of sight rather than
+   squeezing the name. */
+.vbg-custom-week-item[data-size="short"] .vbg-custom-week-text {
+  flex-direction: row;
+  align-items: baseline;
+  column-gap: var(--vbg-space-1);
+  height: 1lh;
+}
+.vbg-custom-week-item[data-size="short"] .vbg-custom-week-text > * {
+  width: auto;
+  max-width: 100%;
+}
+.vbg-custom-week-item[data-size="short"] strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vbg-custom-week-item[data-size="short"] .vbg-custom-week-word {
+  display: inline;
+}
 .vbg-custom-week-item[data-kind="blocked"] {
   color: var(--vbg-text-secondary);
   background: var(--vbg-surface-secondary);
@@ -641,6 +694,27 @@
   background: var(--vbg-surface-primary);
   border: 2px solid var(--vbg-color-error);
   z-index: 1;
+}
+/* Details for the hovered, focused or tapped block. Informational only, so it never
+   takes the pointer from the blocks underneath. */
+.vbg-custom-week-card {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  gap: var(--vbg-space-1);
+  width: max-content;
+  max-width: min(16rem, 100%);
+  padding: var(--vbg-space-2) var(--vbg-space-3);
+  font-size: var(--vbg-type-compact);
+  line-height: var(--vbg-leading-compact);
+  color: var(--vbg-text-primary);
+  background: var(--vbg-surface-primary);
+  border: 1px solid var(--vbg-border-default);
+  border-radius: var(--vbg-radius-small);
+  pointer-events: none;
+}
+.vbg-custom-week-card p {
+  margin: 0;
 }
 .vbg-custom-agenda {
   list-style: none;

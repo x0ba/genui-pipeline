@@ -1,0 +1,411 @@
+/* @malleable/devtools. Every colour, space and font is a custom property, so an
+   app can map the panel onto its own tokens by setting the --mdt-* variables. */
+.mdt-panel {
+  --mdt-text: light-dark(#171717, #ededed);
+  --mdt-text-2: light-dark(#666, #a1a1a1);
+  --mdt-surface: light-dark(#fafafa, #0a0a0a);
+  --mdt-surface-raised: light-dark(#fff, #171717);
+  --mdt-border: light-dark(#ebebeb, #2e2e2e);
+  --mdt-border-strong: light-dark(#c9c9c9, #454545);
+  --mdt-warning: light-dark(#a35200, #ff990a);
+  --mdt-error: light-dark(#cb2a2f, #ff6166);
+  --mdt-font: inherit;
+  --mdt-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --mdt-size: 0.875rem;
+  --mdt-size-small: 0.8125rem;
+  --mdt-size-tiny: 0.75rem;
+  --mdt-size-title: 1.25rem;
+  --mdt-size-subtitle: 1rem;
+  --mdt-weight-medium: 500;
+  --mdt-weight-strong: 600;
+  --mdt-space: 4px;
+  --mdt-radius: 6px;
+  --mdt-pad-block: calc(var(--mdt-space) * 8);
+  --mdt-pad-inline: calc(var(--mdt-space) * 6);
+}
+
+.mdt-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--mdt-space) * 4);
+  padding: var(--mdt-pad-block) var(--mdt-pad-inline);
+  background: var(--mdt-surface);
+  border-left: 1px solid var(--mdt-border);
+  color: var(--mdt-text);
+  font-family: var(--mdt-font);
+  font-size: var(--mdt-size);
+  min-width: 0;
+}
+.mdt-panel > * {
+  flex-shrink: 0;
+}
+.mdt-panel p {
+  margin: 0;
+}
+.mdt-panel [data-state="error"] {
+  color: var(--mdt-error);
+}
+.mdt-panel [data-state="warning"] {
+  color: var(--mdt-warning);
+}
+.mdt-panel[data-collapsed] {
+  padding: 0;
+}
+
+.mdt-title,
+.mdt-subtitle {
+  margin: 0;
+  font-weight: var(--mdt-weight-strong);
+  letter-spacing: -0.01em;
+}
+.mdt-title {
+  font-size: var(--mdt-size-title);
+}
+.mdt-subtitle {
+  font-size: var(--mdt-size-subtitle);
+}
+.mdt-meta {
+  color: var(--mdt-text-2);
+  font-size: var(--mdt-size-small);
+}
+.mdt-mono {
+  font-family: var(--mdt-mono);
+  font-size: 0.92em;
+}
+.mdt-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.mdt-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mdt-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.mdt-head-actions,
+.mdt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--mdt-space) * 3) calc(var(--mdt-space) * 4);
+}
+
+.mdt-text-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--mdt-text);
+  text-decoration: underline;
+  text-decoration-color: var(--mdt-border-strong);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  text-align: left;
+}
+.mdt-text-button:hover {
+  text-decoration-color: currentColor;
+}
+.mdt-text-button:disabled {
+  color: var(--mdt-text-2);
+  text-decoration: none;
+  cursor: default;
+}
+.mdt-button {
+  font: inherit;
+  font-size: var(--mdt-size-small);
+  font-weight: var(--mdt-weight-medium);
+  padding: calc(var(--mdt-space) * 1) calc(var(--mdt-space) * 3);
+  border-radius: var(--mdt-radius);
+  border: 1px solid var(--mdt-border-strong);
+  background: var(--mdt-surface-raised);
+  color: var(--mdt-text);
+  cursor: pointer;
+}
+.mdt-button[aria-pressed="true"] {
+  background: var(--mdt-text);
+  border-color: var(--mdt-text);
+  color: var(--mdt-surface-raised);
+}
+
+.mdt-rail {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: calc(var(--mdt-space) * 3);
+  padding: var(--mdt-pad-block) calc(var(--mdt-space) * 3);
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--mdt-text-2);
+  cursor: pointer;
+  transition:
+    color 0.15s ease-out,
+    background-color 0.15s ease-out;
+}
+.mdt-rail:hover {
+  color: var(--mdt-text);
+  background: var(--mdt-surface-raised);
+}
+.mdt-rail-label {
+  writing-mode: vertical-rl;
+  font-weight: var(--mdt-weight-medium);
+}
+.mdt-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mdt-warning);
+  animation: mdt-live 1.4s ease-in-out infinite;
+}
+@keyframes mdt-live {
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mdt-live {
+    animation: none;
+  }
+}
+
+.mdt-sim {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: calc(var(--mdt-space) * 2) calc(var(--mdt-space) * 4);
+}
+.mdt-sim > * {
+  justify-self: start;
+}
+.mdt-sim-check {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--mdt-space) * 2);
+  font-size: var(--mdt-size-small);
+  color: var(--mdt-text-2);
+}
+
+.mdt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--mdt-size-small);
+}
+.mdt-table :is(td, th) {
+  padding: calc(var(--mdt-space) * 2) calc(var(--mdt-space) * 2);
+  border-bottom: 1px solid var(--mdt-border);
+  text-align: left;
+}
+.mdt-table thead th {
+  color: var(--mdt-text-2);
+  font-weight: var(--mdt-weight-medium);
+}
+.mdt-table tbody th {
+  font-weight: var(--mdt-weight-medium);
+}
+.mdt-table .mdt-num {
+  text-align: right;
+}
+
+.mdt-tabs {
+  position: sticky;
+  top: calc(-1 * var(--mdt-pad-block));
+  z-index: 1;
+  display: flex;
+  gap: calc(var(--mdt-space) * 6);
+  background: var(--mdt-surface);
+  border-bottom: 1px solid var(--mdt-border);
+  overflow-x: auto;
+}
+.mdt-tabs button {
+  position: relative;
+  background: none;
+  border: 0;
+  padding: calc(var(--mdt-space) * 2) 0 calc(var(--mdt-space) * 3);
+  font: inherit;
+  color: var(--mdt-text-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mdt-tabs button[aria-current="true"] {
+  color: var(--mdt-text);
+}
+.mdt-tab-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--mdt-text);
+}
+
+.mdt-body {
+  min-width: 0;
+}
+.mdt-stack,
+.mdt-stack-tight {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: calc(var(--mdt-space) * 4);
+}
+.mdt-stack-tight {
+  gap: calc(var(--mdt-space) * 2);
+}
+.mdt-stack > *,
+.mdt-stack-tight > * {
+  margin: 0;
+}
+.mdt-plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--mdt-space);
+}
+
+.mdt-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.mdt-timeline > li {
+  border-bottom: 1px solid var(--mdt-border);
+  padding: calc(var(--mdt-space) * 4) 0;
+}
+.mdt-entry {
+  display: grid;
+  gap: calc(var(--mdt-space) * 2);
+  font-size: var(--mdt-size-small);
+  min-width: 0;
+}
+.mdt-entry > * {
+  margin: 0;
+}
+.mdt-entry-head {
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--mdt-space) * 3);
+  align-items: baseline;
+}
+.mdt-entry-head .mdt-meta {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.mdt-probs {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) 3rem;
+  gap: var(--mdt-space) calc(var(--mdt-space) * 3);
+  align-items: center;
+}
+.mdt-prob {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  color: var(--mdt-text-2);
+}
+.mdt-prob > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mdt-prob[data-chosen] {
+  color: var(--mdt-text);
+  font-weight: var(--mdt-weight-medium);
+}
+.mdt-prob-track {
+  display: block;
+  height: 6px;
+  background: var(--mdt-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mdt-prob-track > span {
+  display: block;
+  height: 100%;
+  background: var(--mdt-text-2);
+  transform-origin: left;
+}
+.mdt-prob[data-chosen] .mdt-prob-track > span {
+  background: var(--mdt-text);
+}
+.mdt-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 calc(var(--mdt-space) * 3);
+  border-left: 1px solid var(--mdt-border-strong);
+  display: grid;
+  gap: calc(var(--mdt-space) * 2);
+}
+.mdt-step-text {
+  color: var(--mdt-text-2);
+  white-space: pre-wrap;
+}
+.mdt-panel summary {
+  cursor: pointer;
+}
+.mdt-pre {
+  margin: calc(var(--mdt-space) * 2) 0 0;
+  padding: calc(var(--mdt-space) * 3);
+  max-height: 22rem;
+  overflow: auto;
+  font-family: var(--mdt-mono);
+  font-size: var(--mdt-size-tiny);
+  line-height: 1.5;
+  background: var(--mdt-surface-raised);
+  border: 1px solid var(--mdt-border);
+  border-radius: var(--mdt-radius);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.mdt-spec-view {
+  display: grid;
+  gap: var(--mdt-space);
+  padding-bottom: calc(var(--mdt-space) * 3);
+  border-bottom: 1px solid var(--mdt-border);
+}
+.mdt-spec-view > * {
+  margin: 0;
+}
+.mdt-rationale {
+  margin: 0;
+  padding-left: calc(var(--mdt-space) * 5);
+  display: grid;
+  gap: calc(var(--mdt-space) * 2);
+}
+.mdt-changelog li {
+  font-size: var(--mdt-size-small);
+}
+
+@media (max-width: 1100px) {
+  .mdt-rail {
+    flex-direction: row;
+    justify-content: center;
+    padding: calc(var(--mdt-space) * 4);
+  }
+  .mdt-rail-label {
+    writing-mode: horizontal-tb;
+  }
+  .mdt-panel {
+    position: static;
+    height: auto;
+    border-left: 0;
+    border-top: 1px solid var(--mdt-border);
+  }
+}

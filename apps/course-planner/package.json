@@ -1,0 +1,34 @@
+{
+  "name": "course-planner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run scripts/dev.ts",
+    "server": "bun run server/index.ts",
+    "web": "vite",
+    "build": "vite build",
+    "eval": "bun run scripts/eval.ts",
+    "atlas": "bun run scripts/extract-atlas.ts",
+    "contrast": "bun run scripts/check-contrast.ts",
+    "import-legacy": "bun run scripts/import-legacy.ts"
+  },
+  "dependencies": {
+    "@malleable/builder-claude": "workspace:*",
+    "@malleable/core": "workspace:*",
+    "@malleable/decider-typesafe": "workspace:*",
+    "@malleable/devtools": "workspace:*",
+    "@malleable/eval": "workspace:*",
+    "@malleable/react": "workspace:*",
+    "@malleable/server": "workspace:*",
+    "@malleable/verify": "workspace:*",
+    "hono": "^4.13.9",
+    "motion": "^13.4.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "vite": "^8.3.1"
+  }
+}

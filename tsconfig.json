@@ -11,8 +11,16 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["bun", "vite/client"],
-    "paths": { "@kit": ["./web/src/kit/index.ts"] }
+    "types": ["bun"],
+    "paths": { "@kit": ["./apps/course-planner/web/src/kit/index.ts"] }
   },
-  "include": ["shared", "server", "web/src", "scripts", "data/runtime/components", "vite.config.ts"]
+  "include": [
+    "packages/*/src",
+    "packages/*/test",
+    "apps/course-planner/shared",
+    "apps/course-planner/server",
+    "apps/course-planner/web/src",
+    "apps/course-planner/scripts",
+    "apps/course-planner/vite.config.ts"
+  ]
 }

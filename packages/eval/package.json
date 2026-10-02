@@ -1,0 +1,14 @@
+{
+  "name": "@malleable/eval",
+  "version": "0.1.0",
+  "description": "Runs labelled requests against a spec to measure view routing, prop choices and gap detection.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*",
+    "@malleable/server": "workspace:*"
+  }
+}

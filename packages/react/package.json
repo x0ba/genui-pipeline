@@ -1,0 +1,17 @@
+{
+  "name": "@malleable/react",
+  "version": "0.1.0",
+  "description": "MalleableProvider, Region, AskBar and hooks for rendering malleable regions in a React app.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}

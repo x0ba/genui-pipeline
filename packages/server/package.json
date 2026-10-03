@@ -1,0 +1,14 @@
+{
+  "name": "@malleable/server",
+  "version": "0.1.0",
+  "description": "createMalleable: a web-standard fetch handler that serves malleable regions, runs the builder's tools and stores specs and components.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*",
+    "zod": "^4.6.5"
+  }
+}

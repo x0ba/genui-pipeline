@@ -1,0 +1,27 @@
+{
+  "name": "@malleable/verify",
+  "version": "0.1.0",
+  "description": "Static checks, the compiler and the headless Chrome render and legibility audit for generated components.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./harness": "./src/harness/index.tsx"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*",
+    "acorn": "^8.18.0",
+    "esbuild": "^0.25.0",
+    "periscopic": "^4.0.3",
+    "puppeteer-core": "^25.12.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "@types/estree": "^1.0.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}

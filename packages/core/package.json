@@ -1,0 +1,14 @@
+{
+  "name": "@malleable/core",
+  "version": "0.1.0",
+  "description": "Schemas, component definitions, spec checks, prop resolution and decider questions for malleable React interfaces. No React, no Node APIs.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contrast": "./src/contrast.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  }
+}

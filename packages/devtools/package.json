@@ -1,0 +1,19 @@
+{
+  "name": "@malleable/devtools",
+  "version": "0.1.0",
+  "description": "The Pipeline panel: decisions per slot, the event stream, costs, spec history and promotion.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*",
+    "@malleable/react": "workspace:*"
+  },
+  "peerDependencies": {
+    "motion": ">=12",
+    "react": ">=19"
+  }
+}

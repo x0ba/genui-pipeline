@@ -1,0 +1,14 @@
+{
+  "name": "@malleable/decider-typesafe",
+  "version": "0.1.0",
+  "description": "Decider adapter for Jev through @typesafe-ai/sdk.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@malleable/core": "workspace:*",
+    "@typesafe-ai/sdk": "^0.6.0"
+  }
+}

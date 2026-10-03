@@ -1,32 +1,17 @@
 {
-  "name": "genui-pipeline",
+  "name": "malleable-monorepo",
   "private": true,
   "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
   "scripts": {
-    "dev": "bun run scripts/dev.ts",
-    "server": "bun run server/index.ts",
-    "web": "vite",
-    "build": "vite build",
+    "dev": "bun run --cwd apps/course-planner dev",
     "typecheck": "tsc --noEmit -p .",
-    "atlas": "bun run scripts/extract-atlas.ts",
-    "contrast": "bun run scripts/check-contrast.ts"
-  },
-  "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.3.283",
-    "@typesafe-ai/sdk": "^0.6.0",
-    "hono": "^4.13.9",
-    "motion": "^13.4.4",
-    "puppeteer-core": "^25.12.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
-    "zod": "^4.6.5"
+    "test": "bun test packages"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.1.1",
-    "typescript": "^7.0.2",
-    "vite": "^8.3.1"
+    "typescript": "^7.0.2"
   }
 }

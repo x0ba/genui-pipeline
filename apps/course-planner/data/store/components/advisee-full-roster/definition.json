@@ -1,0 +1,57 @@
+{
+  "id": "advisee-full-roster",
+  "version": 1,
+  "title": "Full advisee roster",
+  "description": "One wide table of every advisee with all their information side by side: year, program, GPA, credits earned and planned, plan status, requirements and terms left, holds, conflicts, risk flags, pending overrides and days since last contact, with a footer summary. Rows can be checked for a bulk reminder, and selecting a name opens that advisee.",
+  "audiences": [
+    "advisor"
+  ],
+  "catalog": "data-table",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "density": {
+      "kind": "choice",
+      "label": "Row density",
+      "options": {
+        "compact": "Tight single-line rows to fit the whole caseload with every column on one large screen",
+        "comfortable": "Taller rows with the program under each name, easier to read"
+      },
+      "default": "compact",
+      "catalog": "data-table.density"
+    },
+    "sort": {
+      "kind": "choice",
+      "label": "Sort order",
+      "options": {
+        "name": "Alphabetical by name",
+        "risk": "Advisees with the most risk flags first",
+        "gpa": "Lowest GPA first",
+        "last-contact": "Advisees not contacted for the longest time first"
+      },
+      "default": "name",
+      "catalog": "sort-control.default"
+    },
+    "rows": {
+      "kind": "choice",
+      "label": "Advisees shown",
+      "options": {
+        "all": "Every advisee",
+        "flagged": "Only advisees with at least one risk flag",
+        "under-12": "Only advisees planning fewer than 12 credits",
+        "holds": "Only advisees with a registration hold"
+      },
+      "default": "all",
+      "catalog": "faceted-search.facetSet"
+    }
+  },
+  "origin": {
+    "request": "give me a dense table of all of my advisees and their info",
+    "userId": "okafor",
+    "createdAt": "2026-09-26T21:40:50.622Z",
+    "runId": "0c0dab02"
+  },
+  "artifact": {
+    "hash": "68fe0b216d62886e"
+  }
+}

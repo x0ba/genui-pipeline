@@ -1,0 +1,823 @@
+{
+  "versions": [
+    {
+      "id": "spec-maya",
+      "version": 1,
+      "userId": "maya",
+      "parent": "default@1",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "schedule",
+              "title": "My schedule",
+              "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "week",
+                  "component": "week-calendar",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "primaryView"
+                  ]
+                },
+                {
+                  "id": "plan",
+                  "component": "plan-cart",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "progress",
+              "title": "Degree progress",
+              "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "numbers",
+                  "component": "stat-strip",
+                  "area": "top",
+                  "props": {
+                    "focus": "progress"
+                  },
+                  "adaptive": []
+                },
+                {
+                  "id": "requirements",
+                  "component": "degree-progress",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "presentation",
+                    "detail"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "field-time",
+              "title": "Courses by field and time",
+              "purpose": "List courses filtered by field (STEM or non-STEM) together with start time (such as after 12pm, morning or evening) and, when asked, only open sections, e.g. open STEM courses after noon.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "finder",
+                  "component": "course-field-time-finder",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "field",
+                    "startTime",
+                    "seats"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "sections"
+                  },
+                  "adaptive": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T23:46:56.586Z",
+          "by": "extend",
+          "summary": "Added a view for Maya Chen that filters courses by STEM field, start time and open seats together, using the existing course-field-time-finder component."
+        }
+      ]
+    },
+    {
+      "id": "spec-maya",
+      "version": 2,
+      "userId": "maya",
+      "parent": "spec-maya@1",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "schedule",
+              "title": "My schedule",
+              "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "week",
+                  "component": "week-calendar",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "primaryView"
+                  ]
+                },
+                {
+                  "id": "plan",
+                  "component": "plan-cart",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "progress",
+              "title": "Degree progress",
+              "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "numbers",
+                  "component": "stat-strip",
+                  "area": "top",
+                  "props": {
+                    "focus": "progress"
+                  },
+                  "adaptive": []
+                },
+                {
+                  "id": "requirements",
+                  "component": "degree-progress",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "presentation",
+                    "detail"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "field-time",
+              "title": "Courses by field and time",
+              "purpose": "List courses filtered by field (STEM or non-STEM) together with start time (such as after 12pm, morning or evening) and, when asked, only open sections, e.g. open STEM courses after noon.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "finder",
+                  "component": "course-field-time-finder",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "field",
+                    "startTime",
+                    "seats"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "sections"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "prereq-path",
+              "title": "Path to the capstone",
+              "purpose": "Show how prerequisites chain from completed courses to the senior capstone: which courses are completed, planned, ready to take or still blocked, and the longest unfinished chain (critical path) to the capstone.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "chain",
+                  "component": "prereq-chain",
+                  "area": "main",
+                  "props": {
+                    "density": "comfortable"
+                  },
+                  "adaptive": [
+                    "expandBy",
+                    "content"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "overview"
+                  },
+                  "adaptive": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T23:46:56.586Z",
+          "by": "extend",
+          "summary": "Added a view for Maya Chen that filters courses by STEM field, start time and open seats together, using the existing course-field-time-finder component."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-27T08:30:10.658Z",
+          "by": "extend",
+          "summary": "Added a prerequisite-chain view for Maya that shows how prerequisites lead from completed courses to the senior capstone."
+        }
+      ]
+    },
+    {
+      "id": "spec-maya",
+      "version": 3,
+      "userId": "maya",
+      "parent": "spec-maya@2",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "schedule",
+              "title": "My schedule",
+              "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "week",
+                  "component": "week-calendar",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "primaryView"
+                  ]
+                },
+                {
+                  "id": "plan",
+                  "component": "plan-cart",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "progress",
+              "title": "Degree progress",
+              "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "numbers",
+                  "component": "stat-strip",
+                  "area": "top",
+                  "props": {
+                    "focus": "progress"
+                  },
+                  "adaptive": []
+                },
+                {
+                  "id": "requirements",
+                  "component": "degree-progress",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "presentation",
+                    "detail"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "field-time",
+              "title": "Courses by field and time",
+              "purpose": "List courses filtered by field (STEM or non-STEM) together with start time (such as after 12pm, morning or evening) and, when asked, only open sections, e.g. open STEM courses after noon.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "finder",
+                  "component": "course-field-time-finder",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "field",
+                    "startTime",
+                    "seats"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "sections"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "prereq-path",
+              "title": "Path to the capstone",
+              "purpose": "Show how prerequisites chain from completed courses to the senior capstone: which courses are completed, planned, ready to take or still blocked, and the longest unfinished chain (critical path) to the capstone.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "chain",
+                  "component": "prereq-chain",
+                  "area": "main",
+                  "props": {
+                    "density": "comfortable"
+                  },
+                  "adaptive": [
+                    "expandBy",
+                    "content"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "overview"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "start-time-split",
+              "title": "Classes by start time",
+              "purpose": "Chart how many classes start in the AM versus the PM, or before and after another start time (10 AM, 2 PM, 5 PM) or in three or four time ranges, as a pie, donut or bar chart that can be switched between chart types.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "split",
+                  "component": "start-time-split-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "split",
+                    "markType",
+                    "scope"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T23:46:56.586Z",
+          "by": "extend",
+          "summary": "Added a view for Maya Chen that filters courses by STEM field, start time and open seats together, using the existing course-field-time-finder component."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-27T08:30:10.658Z",
+          "by": "extend",
+          "summary": "Added a prerequisite-chain view for Maya that shows how prerequisites lead from completed courses to the senior capstone."
+        },
+        {
+          "version": 3,
+          "at": "2026-09-27T08:33:12.590Z",
+          "by": "extend",
+          "summary": "Added a \"Classes by start time\" view for Maya with a chart that splits sections into AM/PM (or other start-time cut-offs) and switches between pie, donut and bar charts."
+        }
+      ]
+    },
+    {
+      "id": "spec-maya",
+      "version": 4,
+      "userId": "maya",
+      "parent": "spec-maya@3",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "schedule",
+              "title": "My schedule",
+              "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "week",
+                  "component": "week-calendar",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "primaryView"
+                  ]
+                },
+                {
+                  "id": "plan",
+                  "component": "plan-cart",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "progress",
+              "title": "Degree progress",
+              "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "numbers",
+                  "component": "stat-strip",
+                  "area": "top",
+                  "props": {
+                    "focus": "progress"
+                  },
+                  "adaptive": []
+                },
+                {
+                  "id": "requirements",
+                  "component": "degree-progress",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "presentation",
+                    "detail"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "field-time",
+              "title": "Courses by field and time",
+              "purpose": "List courses filtered by field (STEM or non-STEM) together with start time (such as after 12pm, morning or evening) and, when asked, only open sections, e.g. open STEM courses after noon.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "finder",
+                  "component": "course-field-time-finder",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "field",
+                    "startTime",
+                    "seats"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "sections"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "prereq-path",
+              "title": "Path to the capstone",
+              "purpose": "Show how prerequisites chain from completed courses to the senior capstone: which courses are completed, planned, ready to take or still blocked, and the longest unfinished chain (critical path) to the capstone.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "chain",
+                  "component": "prereq-chain",
+                  "area": "main",
+                  "props": {
+                    "density": "comfortable"
+                  },
+                  "adaptive": [
+                    "expandBy",
+                    "content"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "overview"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "start-time-split",
+              "title": "Classes by start time",
+              "purpose": "Chart how many classes start in the AM versus the PM, or before and after another start time (10 AM, 2 PM, 5 PM) or in three or four time ranges, as a pie, donut or bar chart that can be switched between chart types.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "split",
+                  "component": "start-time-split-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "split",
+                    "markType",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "grade-time",
+              "title": "A-grade rates by class time",
+              "purpose": "See how the percentage of students earning an A varies across class start times, to compare performance in morning, afternoon and evening sections.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "scatter",
+                  "component": "grade-time-scatter",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "markType",
+                    "scope"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T23:46:56.586Z",
+          "by": "extend",
+          "summary": "Added a view for Maya Chen that filters courses by STEM field, start time and open seats together, using the existing course-field-time-finder component."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-27T08:30:10.658Z",
+          "by": "extend",
+          "summary": "Added a prerequisite-chain view for Maya that shows how prerequisites lead from completed courses to the senior capstone."
+        },
+        {
+          "version": 3,
+          "at": "2026-09-27T08:33:12.590Z",
+          "by": "extend",
+          "summary": "Added a \"Classes by start time\" view for Maya with a chart that splits sections into AM/PM (or other start-time cut-offs) and switches between pie, donut and bar charts."
+        },
+        {
+          "version": 4,
+          "at": "2026-09-27T08:35:43.839Z",
+          "by": "extend",
+          "summary": "Add scatter plot view showing A-grade percentage vs. class start time."
+        }
+      ]
+    }
+  ]
+}

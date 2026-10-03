@@ -1,0 +1,160 @@
+{
+  "versions": [
+    {
+      "id": "spec-sam",
+      "version": 1,
+      "userId": "sam",
+      "parent": "default@1",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "home": "catalog",
+      "views": [
+        {
+          "id": "catalog",
+          "title": "Course catalog",
+          "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+          "layout": "main-aside",
+          "slots": [
+            {
+              "id": "notice",
+              "component": "deadline-banner",
+              "region": "top",
+              "props": {},
+              "adaptive": [
+                "tone"
+              ]
+            },
+            {
+              "id": "results",
+              "component": "course-search",
+              "region": "main",
+              "props": {},
+              "adaptive": [
+                "timeFilter",
+                "seats",
+                "scope",
+                "ranking"
+              ]
+            },
+            {
+              "id": "detail",
+              "component": "course-detail",
+              "region": "aside",
+              "props": {},
+              "adaptive": [
+                "emphasis"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "schedule",
+          "title": "My schedule",
+          "purpose": "See the week of planned classes, check for time conflicts, and review or submit the enrollment plan.",
+          "layout": "main-aside",
+          "slots": [
+            {
+              "id": "week",
+              "component": "week-calendar",
+              "region": "main",
+              "props": {},
+              "adaptive": [
+                "primaryView"
+              ]
+            },
+            {
+              "id": "plan",
+              "component": "plan-cart",
+              "region": "aside",
+              "props": {},
+              "adaptive": []
+            }
+          ]
+        },
+        {
+          "id": "progress",
+          "title": "Degree progress",
+          "purpose": "Check which degree requirements are complete, planned or remaining, and which courses to take next.",
+          "layout": "main-aside",
+          "slots": [
+            {
+              "id": "numbers",
+              "component": "stat-strip",
+              "region": "top",
+              "props": {
+                "focus": "progress"
+              },
+              "adaptive": []
+            },
+            {
+              "id": "requirements",
+              "component": "degree-progress",
+              "region": "main",
+              "props": {},
+              "adaptive": [
+                "presentation",
+                "detail"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "demand",
+          "title": "Seat availability",
+          "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+          "layout": "stack",
+          "slots": [
+            {
+              "id": "chart",
+              "component": "demand-chart",
+              "region": "main",
+              "props": {},
+              "adaptive": [
+                "measure",
+                "scope"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-heatmap",
+          "title": "Classes across the week",
+          "purpose": "Show a heat map of how many courses or sections this term meet on each weekday in each time frame (half-hour, hour, two-hour block, or morning/afternoon/evening), to see the busiest and quietest times of the week.",
+          "layout": "main-aside",
+          "slots": [
+            {
+              "id": "heatmap",
+              "component": "weekly-time-heatmap",
+              "region": "main",
+              "props": {},
+              "adaptive": [
+                "bins",
+                "count",
+                "scope"
+              ]
+            },
+            {
+              "id": "detail",
+              "component": "course-detail",
+              "region": "aside",
+              "props": {},
+              "adaptive": [
+                "emphasis"
+              ]
+            }
+          ]
+        }
+      ],
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-27T00:11:56.560Z",
+          "by": "claude-extend",
+          "summary": "Added a \"Classes across the week\" view with a day-by-time heat map of how many courses or sections meet in each time frame, for Sam Rivera."
+        }
+      ]
+    }
+  ]
+}

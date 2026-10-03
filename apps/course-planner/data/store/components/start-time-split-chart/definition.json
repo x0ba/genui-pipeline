@@ -1,0 +1,61 @@
+{
+  "id": "start-time-split-chart",
+  "version": 1,
+  "title": "Classes by start-time split",
+  "description": "A pie, donut or bar chart of how many sections start on each side of a start-time split, such as AM (before noon) versus PM (noon or later), before or after 10 AM, 2 PM or 5 PM, or three or four time ranges, for the whole schedule, CS courses, remaining requirements, open sections or the person's planned classes. Buttons above the chart switch between pie, donut and bars.",
+  "audiences": [
+    "student"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "split": {
+      "kind": "choice",
+      "label": "Start-time split",
+      "options": {
+        "am-pm": "Two groups: AM classes starting before noon and PM classes starting at noon or later",
+        "three-periods": "Three groups: morning (before noon), afternoon (noon to 5 PM) and evening (5 PM or later)",
+        "four-ranges": "Four groups: before 10 AM, 10 AM to noon, noon to 3 PM, and 3 PM or later",
+        "cutoff-10am": "Two groups: classes starting before 10 AM and classes starting at 10 AM or later",
+        "cutoff-2pm": "Two groups: classes starting before 2 PM and classes starting at 2 PM or later",
+        "cutoff-5pm": "Two groups: classes starting before 5 PM and classes starting at 5 PM or later"
+      },
+      "default": "am-pm",
+      "catalog": "chart.scale"
+    },
+    "markType": {
+      "kind": "choice",
+      "label": "Initial chart type",
+      "options": {
+        "pie": "Opens as a pie chart of shares; the person can switch to donut or bars with the buttons",
+        "donut": "Opens as a donut chart with the total in the centre; the person can switch to pie or bars",
+        "bars": "Opens as horizontal bars comparing exact counts; the person can switch to pie or donut"
+      },
+      "default": "pie",
+      "catalog": "chart.markType"
+    },
+    "scope": {
+      "kind": "choice",
+      "label": "Classes included",
+      "options": {
+        "all": "Every section in this term's schedule",
+        "planned": "Only the sections the person has planned this term",
+        "cs": "Only computer science sections",
+        "remaining": "Only sections of courses that satisfy the person's unmet degree requirements",
+        "open": "Only sections that still have open seats, leaving out full sections"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    }
+  },
+  "origin": {
+    "request": "give me a view where i can switch betwen pie charts and bar charts for am and pm classes",
+    "userId": "maya",
+    "createdAt": "2026-09-27T08:33:00.379Z",
+    "runId": "d10c0f1d"
+  },
+  "artifact": {
+    "hash": "327bb07f9eb4f4ff"
+  }
+}

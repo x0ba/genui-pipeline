@@ -1,0 +1,46 @@
+{
+  "id": "grade-time-scatter",
+  "version": 1,
+  "title": "A-grade distribution by class time",
+  "description": "A scatter plot showing the percentage of students who earned an A in each course versus the time of day that course starts, revealing whether morning, afternoon or evening sections correlate with higher grades.",
+  "audiences": [
+    "student"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "markType": {
+      "kind": "choice",
+      "label": "Mark type",
+      "options": {
+        "points": "Scatter points, one per course, showing the spread of A-grade rates across start times",
+        "bubble": "Bubble chart where point size represents course enrollment, to see if popularity correlates with grades",
+        "trend": "Scatter points with a trend line to see the overall pattern of grades versus start time"
+      },
+      "default": "points",
+      "catalog": "chart.markType"
+    },
+    "scope": {
+      "kind": "choice",
+      "label": "Courses included",
+      "options": {
+        "all": "Every course in this term's schedule",
+        "cs": "Only computer science courses",
+        "remaining": "Only courses that satisfy the person's unmet degree requirements",
+        "open": "Only sections that still have open seats"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    }
+  },
+  "origin": {
+    "request": "give me a scatter plot of percentage of students with an A in the class vs time of day",
+    "userId": "maya",
+    "createdAt": "2026-09-27T08:35:34.628Z",
+    "runId": "777e5933"
+  },
+  "artifact": {
+    "hash": "2abeb5a2a2862ae9"
+  }
+}

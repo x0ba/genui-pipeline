@@ -1,0 +1,784 @@
+{
+  "versions": [
+    {
+      "id": "spec-okafor",
+      "version": 1,
+      "userId": "okafor",
+      "parent": "default@1",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-week",
+              "title": "Advisee class times",
+              "purpose": "See a heatmap of when advisees' planned classes meet across the weekdays and hours, find the busiest and freest times, and list which advisees are in class at a given time.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "heatmap",
+                  "component": "advisee-meeting-heatmap",
+                  "area": "main",
+                  "props": {
+                    "annotation": "counts"
+                  },
+                  "adaptive": [
+                    "scope",
+                    "binSize"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "plan"
+                  },
+                  "adaptive": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T21:31:28.392Z",
+          "by": "extend",
+          "summary": "Added an advisee class-time heatmap view for Dr. Okafor showing when advisees' planned classes meet across the week."
+        }
+      ]
+    },
+    {
+      "id": "spec-okafor",
+      "version": 2,
+      "userId": "okafor",
+      "parent": "spec-okafor@1",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-week",
+              "title": "Advisee class times",
+              "purpose": "See a heatmap of when advisees' planned classes meet across the weekdays and hours, find the busiest and freest times, and list which advisees are in class at a given time.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "heatmap",
+                  "component": "advisee-meeting-heatmap",
+                  "area": "main",
+                  "props": {
+                    "annotation": "counts"
+                  },
+                  "adaptive": [
+                    "scope",
+                    "binSize"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "plan"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "advisee-roster",
+              "title": "All advisees",
+              "purpose": "See a dense table of all advisees with all their information at once (year, program, GPA, credits, plan status, requirements left, holds, conflicts, flags, overrides, last contact), sort or narrow it, and send bulk reminders.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "roster",
+                  "component": "advisee-full-roster",
+                  "area": "main",
+                  "props": {
+                    "density": "compact"
+                  },
+                  "adaptive": [
+                    "sort",
+                    "rows"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T21:31:28.392Z",
+          "by": "extend",
+          "summary": "Added an advisee class-time heatmap view for Dr. Okafor showing when advisees' planned classes meet across the week."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-26T21:40:54.482Z",
+          "by": "extend",
+          "summary": "Added an \"All advisees\" view with a dense full-information roster table for Dr. Okafor."
+        }
+      ]
+    },
+    {
+      "id": "spec-okafor",
+      "version": 3,
+      "userId": "okafor",
+      "parent": "spec-okafor@2",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-week",
+              "title": "Advisee class times",
+              "purpose": "See a heatmap of when advisees' planned classes meet across the weekdays and hours, find the busiest and freest times, and list which advisees are in class at a given time.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "heatmap",
+                  "component": "advisee-meeting-heatmap",
+                  "area": "main",
+                  "props": {
+                    "annotation": "counts"
+                  },
+                  "adaptive": [
+                    "scope",
+                    "binSize"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "plan"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "advisee-roster",
+              "title": "All advisees",
+              "purpose": "See a dense table of all advisees with all their information at once (year, program, GPA, credits, plan status, requirements left, holds, conflicts, flags, overrides, last contact), sort or narrow it, and send bulk reminders.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "roster",
+                  "component": "advisee-full-roster",
+                  "area": "main",
+                  "props": {
+                    "density": "compact"
+                  },
+                  "adaptive": [
+                    "sort",
+                    "rows"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T21:31:28.392Z",
+          "by": "extend",
+          "summary": "Added an advisee class-time heatmap view for Dr. Okafor showing when advisees' planned classes meet across the week."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-26T21:40:54.482Z",
+          "by": "extend",
+          "summary": "Added an \"All advisees\" view with a dense full-information roster table for Dr. Okafor."
+        },
+        {
+          "version": 3,
+          "at": "2026-09-26T23:22:07.814Z",
+          "by": "system",
+          "summary": "Course search can now filter to sections with open seats."
+        }
+      ]
+    },
+    {
+      "id": "spec-okafor",
+      "version": 4,
+      "userId": "okafor",
+      "parent": "spec-okafor@3",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-week",
+              "title": "Advisee class times",
+              "purpose": "See a heatmap of when advisees' planned classes meet across the weekdays and hours, find the busiest and freest times, and list which advisees are in class at a given time.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "heatmap",
+                  "component": "advisee-meeting-heatmap",
+                  "area": "main",
+                  "props": {
+                    "annotation": "counts"
+                  },
+                  "adaptive": [
+                    "scope",
+                    "binSize"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "plan"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "advisee-roster",
+              "title": "All advisees",
+              "purpose": "See a dense table of all advisees with all their information at once (year, program, GPA, credits, plan status, requirements left, holds, conflicts, flags, overrides, last contact), sort or narrow it, and send bulk reminders.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "roster",
+                  "component": "advisee-full-roster",
+                  "area": "main",
+                  "props": {
+                    "density": "compact"
+                  },
+                  "adaptive": [
+                    "sort",
+                    "rows"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-gpa",
+              "title": "Advisee GPA distribution",
+              "purpose": "See a pie, donut or bar chart of how many advisees have GPAs in each range (0–1, 1–2, 2–3, 3–4 or half-point ranges), and list which advisees fall in a given GPA range.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "gpa-chart",
+                  "component": "advisee-gpa-distribution",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "markType",
+                    "bins",
+                    "scope"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T21:31:28.392Z",
+          "by": "extend",
+          "summary": "Added an advisee class-time heatmap view for Dr. Okafor showing when advisees' planned classes meet across the week."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-26T21:40:54.482Z",
+          "by": "extend",
+          "summary": "Added an \"All advisees\" view with a dense full-information roster table for Dr. Okafor."
+        },
+        {
+          "version": 3,
+          "at": "2026-09-26T23:22:07.814Z",
+          "by": "system",
+          "summary": "Course search can now filter to sections with open seats."
+        },
+        {
+          "version": 4,
+          "at": "2026-09-26T23:48:41.829Z",
+          "by": "extend",
+          "summary": "Added a GPA distribution view so Dr. Okafor can see a pie, donut or bar chart of how many advisees fall in each GPA range."
+        }
+      ]
+    },
+    {
+      "id": "spec-okafor",
+      "version": 5,
+      "userId": "okafor",
+      "parent": "spec-okafor@4",
+      "profile": "A typical university user browsing the Spring 2027 schedule. No known preferences, constraints or role-specific workflows.",
+      "regions": {
+        "dashboard": {
+          "home": "catalog",
+          "views": [
+            {
+              "id": "catalog",
+              "title": "Course catalog",
+              "purpose": "Find, search, filter or browse the courses and sections offered this term, and read one course's details.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "notice",
+                  "component": "deadline-banner",
+                  "area": "top",
+                  "props": {},
+                  "adaptive": [
+                    "tone"
+                  ]
+                },
+                {
+                  "id": "results",
+                  "component": "course-search",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "timeFilter",
+                    "seats",
+                    "scope",
+                    "ranking"
+                  ]
+                },
+                {
+                  "id": "detail",
+                  "component": "course-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "demand",
+              "title": "Seat availability",
+              "purpose": "See which courses are full or waitlisted and how demand compares with capacity.",
+              "layout": "stack",
+              "slots": [
+                {
+                  "id": "chart",
+                  "component": "demand-chart",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "measure",
+                    "scope"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-week",
+              "title": "Advisee class times",
+              "purpose": "See a heatmap of when advisees' planned classes meet across the weekdays and hours, find the busiest and freest times, and list which advisees are in class at a given time.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "heatmap",
+                  "component": "advisee-meeting-heatmap",
+                  "area": "main",
+                  "props": {
+                    "annotation": "counts"
+                  },
+                  "adaptive": [
+                    "scope",
+                    "binSize"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {
+                    "emphasis": "plan"
+                  },
+                  "adaptive": []
+                }
+              ]
+            },
+            {
+              "id": "advisee-roster",
+              "title": "All advisees",
+              "purpose": "See a dense table of all advisees with all their information at once (year, program, GPA, credits, plan status, requirements left, holds, conflicts, flags, overrides, last contact), sort or narrow it, and send bulk reminders.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "roster",
+                  "component": "advisee-full-roster",
+                  "area": "main",
+                  "props": {
+                    "density": "compact"
+                  },
+                  "adaptive": [
+                    "sort",
+                    "rows"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "advisee-gpa",
+              "title": "Advisee GPA distribution",
+              "purpose": "See a pie, donut or bar chart of how many advisees have GPAs in each range (one-point ranges 0–1 to 3–4, half-point ranges, two ranges 0–2 and 2–4, or above and below a 2.5, 3.0 or 3.5 GPA), and list which advisees fall in a given GPA range.",
+              "layout": "main-aside",
+              "slots": [
+                {
+                  "id": "gpa-chart",
+                  "component": "advisee-gpa-distribution",
+                  "area": "main",
+                  "props": {},
+                  "adaptive": [
+                    "markType",
+                    "bins",
+                    "scope"
+                  ]
+                },
+                {
+                  "id": "advisee",
+                  "component": "advisee-detail",
+                  "area": "aside",
+                  "props": {},
+                  "adaptive": [
+                    "emphasis"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "rationale": [
+        "The shared default: a catalog with detail, a schedule, degree progress and seat availability. It serves most students without personalization."
+      ],
+      "changelog": [
+        {
+          "version": 1,
+          "at": "2026-09-26T21:31:28.392Z",
+          "by": "extend",
+          "summary": "Added an advisee class-time heatmap view for Dr. Okafor showing when advisees' planned classes meet across the week."
+        },
+        {
+          "version": 2,
+          "at": "2026-09-26T21:40:54.482Z",
+          "by": "extend",
+          "summary": "Added an \"All advisees\" view with a dense full-information roster table for Dr. Okafor."
+        },
+        {
+          "version": 3,
+          "at": "2026-09-26T23:22:07.814Z",
+          "by": "system",
+          "summary": "Course search can now filter to sections with open seats."
+        },
+        {
+          "version": 4,
+          "at": "2026-09-26T23:48:41.829Z",
+          "by": "extend",
+          "summary": "Added a GPA distribution view so Dr. Okafor can see a pie, donut or bar chart of how many advisees fall in each GPA range."
+        },
+        {
+          "version": 5,
+          "at": "2026-09-27T00:07:06.917Z",
+          "by": "extend",
+          "summary": "Updated the Advisee GPA distribution view's purpose to cover the new two-range splits (0–2 and 2–4, and above and below 2.5, 3.0 or 3.5) now offered by the advisee-gpa-distribution chart."
+        }
+      ]
+    }
+  ]
+}

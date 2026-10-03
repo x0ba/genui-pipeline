@@ -1,0 +1,56 @@
+{
+  "id": "time-of-day-chart",
+  "version": 1,
+  "title": "Classes by time of day",
+  "description": "A pie, donut or bar chart of how many courses or sections this term start in the morning (before noon), afternoon (noon to 5pm) and evening (5pm or later), with counts and shares per period and an optional filter to CS courses, remaining requirements or sections with open seats.",
+  "audiences": [
+    "student"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "markType": {
+      "kind": "choice",
+      "label": "Chart type",
+      "options": {
+        "pie": "A pie chart, when the person asks for a pie or for shares of the whole",
+        "donut": "A donut chart with the total in the centre, when the person asks for a donut or ring chart",
+        "bars": "Horizontal bars, when the person wants to compare exact counts between morning, afternoon and evening"
+      },
+      "default": "pie",
+      "catalog": "chart.markType"
+    },
+    "count": {
+      "kind": "choice",
+      "label": "What is counted",
+      "options": {
+        "courses": "Distinct courses offered in each period; a course with sections at several times counts once in each of those periods",
+        "sections": "Individual sections by start time, so every section counts exactly once and the slices add up to the whole schedule"
+      },
+      "default": "courses",
+      "catalog": "chart.channels"
+    },
+    "scope": {
+      "kind": "choice",
+      "label": "Courses included",
+      "options": {
+        "all": "Every course in this term's schedule",
+        "cs": "Only computer science courses",
+        "remaining": "Only courses that satisfy the person's unmet degree requirements",
+        "open": "Only sections that still have open seats, to leave out full and waitlisted sections"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    }
+  },
+  "origin": {
+    "request": "give me a pie chart of the amount of courses in the mornings vs evenings vs afternoons",
+    "userId": "maya",
+    "createdAt": "2026-09-26T21:39:12.610Z",
+    "runId": "cf445821"
+  },
+  "artifact": {
+    "hash": "9ceb0cb8d1aefae3"
+  }
+}

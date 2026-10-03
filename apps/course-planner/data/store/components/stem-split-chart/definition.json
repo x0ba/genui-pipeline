@@ -1,0 +1,55 @@
+{
+  "id": "stem-split-chart",
+  "version": 1,
+  "title": "STEM vs non-STEM classes",
+  "description": "A pie, donut or bar chart of the ratio of STEM classes (computer science, mathematics, statistics, the sciences and engineering) to non-STEM classes, counted in courses or credits, for this term's schedule, the person's completed courses, or their completed plus planned courses, with a table listing the departments in each group.",
+  "audiences": [
+    "student"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "markType": {
+      "kind": "choice",
+      "label": "Chart type",
+      "options": {
+        "pie": "A pie chart, when the person asks for a pie or for shares of the whole",
+        "donut": "A donut chart with the total in the centre, when the person asks for a donut or ring chart",
+        "bars": "Horizontal bars, when the person wants to compare exact STEM and non-STEM counts"
+      },
+      "default": "pie",
+      "catalog": "chart.markType"
+    },
+    "population": {
+      "kind": "choice",
+      "label": "Classes included",
+      "options": {
+        "schedule": "Every course offered in this term's schedule",
+        "completed": "Only the courses the person has already completed",
+        "mine": "The person's completed courses plus the sections planned this term, their whole record so far"
+      },
+      "default": "schedule",
+      "catalog": "chart.faceting"
+    },
+    "measure": {
+      "kind": "choice",
+      "label": "What is counted",
+      "options": {
+        "courses": "Number of courses in each group",
+        "credits": "Credit hours in each group, when the person asks about credits or workload balance"
+      },
+      "default": "courses",
+      "catalog": "chart.channels"
+    }
+  },
+  "origin": {
+    "request": "give me a pie chart that shows the ratio of stem classes to non-stem classes",
+    "userId": "maya",
+    "createdAt": "2026-09-26T22:55:16.763Z",
+    "runId": "3bcec9d3"
+  },
+  "artifact": {
+    "hash": "fb641d19b09a5c6d"
+  }
+}

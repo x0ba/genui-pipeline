@@ -1,0 +1,57 @@
+{
+  "id": "weekly-time-heatmap",
+  "version": 1,
+  "title": "Classes across the week",
+  "description": "A heat map with Monday to Friday as columns and time frames (half-hour, one-hour, two-hour blocks or morning/afternoon/evening) as rows, each cell shaded and labelled with how many courses or sections meet then, optionally limited to CS courses, remaining requirements or sections with open seats. Selecting a cell lists its courses, and selecting a course opens it in course detail.",
+  "audiences": [
+    "student"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "bins": {
+      "kind": "choice",
+      "label": "Time frames",
+      "options": {
+        "hour": "One row per hour of the day, such as 9–10 AM and 10–11 AM",
+        "half-hour": "One row per half hour, such as 9:00–9:30 and 9:30–10:00, for the finest detail",
+        "two-hour": "One row per two-hour block, such as 8–10 AM and 10 AM–12 PM",
+        "period": "Three rows: morning (before noon), afternoon (noon to 5 PM) and evening (5 PM or later)"
+      },
+      "default": "hour",
+      "catalog": "chart.scale"
+    },
+    "count": {
+      "kind": "choice",
+      "label": "What is counted",
+      "options": {
+        "courses": "Distinct courses with at least one section meeting in each day and time frame",
+        "sections": "Individual sections meeting in each day and time frame"
+      },
+      "default": "courses",
+      "catalog": "chart.channels"
+    },
+    "scope": {
+      "kind": "choice",
+      "label": "Courses included",
+      "options": {
+        "all": "Every course in this term's schedule",
+        "cs": "Only computer science courses",
+        "remaining": "Only courses that satisfy the person's unmet degree requirements",
+        "open": "Only sections that still have open seats, leaving out full sections"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    }
+  },
+  "origin": {
+    "request": "Show me a heat map of how many courses are in each time frame during the week.",
+    "userId": "sam",
+    "createdAt": "2026-09-27T00:11:45.100Z",
+    "runId": "463b5730"
+  },
+  "artifact": {
+    "hash": "96766100498153a1"
+  }
+}

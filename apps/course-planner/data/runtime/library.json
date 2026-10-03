@@ -1,0 +1,479 @@
+[
+  {
+    "id": "prereq-chain",
+    "title": "Prerequisite chain to the capstone",
+    "description": "A tree rooted at each capstone course that branches into its prerequisites, and their prerequisites, back to courses already completed, marking each course as completed, planned, ready to take or still blocked, with a summary of the longest unfinished chain. Selecting a course opens it in course detail.",
+    "atlas": "tree-view",
+    "source": "generated",
+    "roles": [
+      "student",
+      "advisor"
+    ],
+    "props": {
+      "content": {
+        "label": "Node content",
+        "atlas": "tree-view.content",
+        "options": {
+          "status": "Each course with whether it is completed, planned, ready to take, or which prerequisites it still needs",
+          "seats": "Status plus this term's sections, open seats and waitlist for courses not yet taken, to spot full or waitlisted courses on the path"
+        },
+        "default": "status"
+      },
+      "expandBy": {
+        "label": "Expanded branches",
+        "atlas": "tree-view.expandBy",
+        "options": {
+          "remaining": "Completed courses collapsed so only the unfinished part of each chain is open",
+          "all": "Every prerequisite branch expanded back to the first courses taken, to see the whole chain from completed courses to the capstone",
+          "path": "Only the longest unfinished chain to the capstone expanded, to see the critical path that sets the earliest graduation term"
+        },
+        "default": "remaining"
+      },
+      "density": {
+        "label": "Density",
+        "atlas": "tree-view.density",
+        "options": {
+          "compact": "One short line per course, to see a deep chain at once",
+          "comfortable": "Course title and status on separate lines with larger tap targets, for phones"
+        },
+        "default": "comfortable"
+      }
+    },
+    "origin": {
+      "request": "Show how prerequisites chain from what I've taken to the capstone",
+      "userId": "maya",
+      "createdAt": "2026-09-26T17:24:29.683Z",
+      "runId": "7a6d0ab6"
+    }
+  },
+  {
+    "id": "advisee-meeting-heatmap",
+    "title": "When advisees are in class",
+    "description": "Heatmap of the week, weekdays across and time of day down, where each cell's shade shows how many of the advisor's advisees have a planned class meeting then. Selecting a cell lists those advisees and their classes, and selecting a name opens that advisee.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "advisor"
+    ],
+    "props": {
+      "scope": {
+        "label": "Advisees and classes counted",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every advisee's planned classes",
+          "flagged": "Only advisees with risk flags such as holds, low credits or conflicts",
+          "cs": "Only planned computer science classes, to see when the CS cohort is busy"
+        },
+        "default": "all"
+      },
+      "binSize": {
+        "label": "Time resolution",
+        "atlas": "chart.scale",
+        "options": {
+          "hour": "One row per hour, for an at-a-glance view of the week",
+          "half-hour": "One row per 30 minutes, to find an exact free slot for a meeting or advising session"
+        },
+        "default": "hour"
+      },
+      "annotation": {
+        "label": "Cell labels",
+        "atlas": "chart.annotation",
+        "options": {
+          "counts": "The number of advisees in class printed in every busy cell",
+          "peaks": "Only the three busiest times outlined and labelled, to spot peaks quickly"
+        },
+        "default": "counts"
+      }
+    },
+    "origin": {
+      "request": "Show a heatmap of when my advisees' planned classes meet across the week",
+      "userId": "okafor",
+      "createdAt": "2026-09-26T21:31:23.609Z",
+      "runId": "e3c050b8"
+    }
+  },
+  {
+    "id": "time-of-day-chart",
+    "title": "Classes by time of day",
+    "description": "A pie, donut or bar chart of how many courses or sections this term start in the morning (before noon), afternoon (noon to 5pm) and evening (5pm or later), with counts and shares per period and an optional filter to CS courses, remaining requirements or sections with open seats.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "student"
+    ],
+    "props": {
+      "markType": {
+        "label": "Chart type",
+        "atlas": "chart.markType",
+        "options": {
+          "pie": "A pie chart, when the person asks for a pie or for shares of the whole",
+          "donut": "A donut chart with the total in the centre, when the person asks for a donut or ring chart",
+          "bars": "Horizontal bars, when the person wants to compare exact counts between morning, afternoon and evening"
+        },
+        "default": "pie"
+      },
+      "count": {
+        "label": "What is counted",
+        "atlas": "chart.channels",
+        "options": {
+          "courses": "Distinct courses offered in each period; a course with sections at several times counts once in each of those periods",
+          "sections": "Individual sections by start time, so every section counts exactly once and the slices add up to the whole schedule"
+        },
+        "default": "courses"
+      },
+      "scope": {
+        "label": "Courses included",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every course in this term's schedule",
+          "cs": "Only computer science courses",
+          "remaining": "Only courses that satisfy the person's unmet degree requirements",
+          "open": "Only sections that still have open seats, to leave out full and waitlisted sections"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "give me a pie chart of the amount of courses in the mornings vs evenings vs afternoons",
+      "userId": "maya",
+      "createdAt": "2026-09-26T21:39:12.610Z",
+      "runId": "cf445821"
+    }
+  },
+  {
+    "id": "advisee-full-roster",
+    "title": "Full advisee roster",
+    "description": "One wide table of every advisee with all their information side by side: year, program, GPA, credits earned and planned, plan status, requirements and terms left, holds, conflicts, risk flags, pending overrides and days since last contact, with a footer summary. Rows can be checked for a bulk reminder, and selecting a name opens that advisee.",
+    "atlas": "data-table",
+    "source": "generated",
+    "roles": [
+      "advisor"
+    ],
+    "props": {
+      "density": {
+        "label": "Row density",
+        "atlas": "data-table.density",
+        "options": {
+          "compact": "Tight single-line rows to fit the whole caseload with every column on one large screen",
+          "comfortable": "Taller rows with the program under each name, easier to read"
+        },
+        "default": "compact"
+      },
+      "sort": {
+        "label": "Sort order",
+        "atlas": "sort-control.default",
+        "options": {
+          "name": "Alphabetical by name",
+          "risk": "Advisees with the most risk flags first",
+          "gpa": "Lowest GPA first",
+          "last-contact": "Advisees not contacted for the longest time first"
+        },
+        "default": "name"
+      },
+      "rows": {
+        "label": "Advisees shown",
+        "atlas": "faceted-search.facetSet",
+        "options": {
+          "all": "Every advisee",
+          "flagged": "Only advisees with at least one risk flag",
+          "under-12": "Only advisees planning fewer than 12 credits",
+          "holds": "Only advisees with a registration hold"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "give me a dense table of all of my advisees and their info",
+      "userId": "okafor",
+      "createdAt": "2026-09-26T21:40:50.622Z",
+      "runId": "0c0dab02"
+    }
+  },
+  {
+    "id": "stem-split-chart",
+    "title": "STEM vs non-STEM classes",
+    "description": "A pie, donut or bar chart of the ratio of STEM classes (computer science, mathematics, statistics, the sciences and engineering) to non-STEM classes, counted in courses or credits, for this term's schedule, the person's completed courses, or their completed plus planned courses, with a table listing the departments in each group.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "student"
+    ],
+    "props": {
+      "markType": {
+        "label": "Chart type",
+        "atlas": "chart.markType",
+        "options": {
+          "pie": "A pie chart, when the person asks for a pie or for shares of the whole",
+          "donut": "A donut chart with the total in the centre, when the person asks for a donut or ring chart",
+          "bars": "Horizontal bars, when the person wants to compare exact STEM and non-STEM counts"
+        },
+        "default": "pie"
+      },
+      "population": {
+        "label": "Classes included",
+        "atlas": "chart.faceting",
+        "options": {
+          "schedule": "Every course offered in this term's schedule",
+          "completed": "Only the courses the person has already completed",
+          "mine": "The person's completed courses plus the sections planned this term, their whole record so far"
+        },
+        "default": "schedule"
+      },
+      "measure": {
+        "label": "What is counted",
+        "atlas": "chart.channels",
+        "options": {
+          "courses": "Number of courses in each group",
+          "credits": "Credit hours in each group, when the person asks about credits or workload balance"
+        },
+        "default": "courses"
+      }
+    },
+    "origin": {
+      "request": "give me a pie chart that shows the ratio of stem classes to non-stem classes",
+      "userId": "maya",
+      "createdAt": "2026-09-26T22:55:16.763Z",
+      "runId": "3bcec9d3"
+    }
+  },
+  {
+    "id": "course-field-time-finder",
+    "title": "Courses by field and start time",
+    "description": "A table of this term's courses filtered by field (STEM or non-STEM, by department) and by when their sections start (morning, after noon, or evening), listing each course's matching section times and open seats. Selecting a course opens it in course detail.",
+    "atlas": "faceted-search",
+    "source": "generated",
+    "roles": [
+      "student",
+      "advisor"
+    ],
+    "props": {
+      "field": {
+        "label": "Field",
+        "atlas": "faceted-search.types",
+        "options": {
+          "any": "Courses in every department, when the request does not mention STEM or non-STEM",
+          "stem": "Only STEM courses: computer science, mathematics, statistics, the natural sciences and engineering",
+          "non-stem": "Only non-STEM courses, such as humanities, arts, social sciences, languages and business"
+        },
+        "default": "any"
+      },
+      "startTime": {
+        "label": "Start time",
+        "atlas": "faceted-search.facetSet",
+        "options": {
+          "any": "Sections at any time of day",
+          "morning": "Only sections that start before noon",
+          "after-noon": "Only sections that start at noon or later, afternoon and evening together, for requests like after noon, after lunch or in the afternoon or later",
+          "evening": "Only sections that start at 5pm or later"
+        },
+        "default": "any"
+      },
+      "seats": {
+        "label": "Seat availability",
+        "atlas": "faceted-search.facetSet",
+        "options": {
+          "any": "Every matching section, full or not, whenever the request does not ask about availability",
+          "open": "Only sections that still have open seats, when the request asks for courses that are open or not full"
+        },
+        "default": "any"
+      }
+    },
+    "origin": {
+      "request": "Show me the courses that are after noon that are non-stem.",
+      "userId": "maya",
+      "createdAt": "2026-09-26T23:36:11.242Z",
+      "runId": "8b5e7c84"
+    }
+  },
+  {
+    "id": "advisee-gpa-distribution",
+    "title": "Advisee GPA distribution",
+    "description": "A pie, donut or bar chart of how many of the advisor's advisees fall into each GPA range (four one-point ranges, eight half-point ranges, two halves 0–2 and 2–4, or above and below a 2.5, 3.0 or 3.5 cut-off), with counts and shares. Selecting a range lists those advisees with their GPAs, and selecting a name opens that advisee.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "advisor"
+    ],
+    "props": {
+      "markType": {
+        "label": "Chart type",
+        "atlas": "chart.markType",
+        "options": {
+          "pie": "A pie chart, when the request asks for a pie chart or for shares of the whole",
+          "donut": "A donut chart with the total in the centre, when the request asks for a donut or ring chart",
+          "bars": "Horizontal bars, when the request asks for a bar chart, histogram, or to compare counts precisely"
+        },
+        "default": "pie"
+      },
+      "bins": {
+        "label": "GPA ranges",
+        "atlas": "chart.scale",
+        "options": {
+          "whole": "Four one-point ranges: 0–1, 1–2, 2–3 and 3–4",
+          "half": "Eight half-point ranges: 0–0.5, 0.5–1, 1–1.5, 1.5–2, 2–2.5, 2.5–3, 3–3.5 and 3.5–4",
+          "two": "Two ranges split at 2.0: 0–2 and 2–4 (below and above a 2.0 GPA)",
+          "cut-2-5": "Two ranges split at 2.5: 0–2.5 and 2.5–4 (below and above a 2.5 GPA)",
+          "cut-3": "Two ranges split at 3.0: 0–3 and 3–4 (below and above a 3.0 GPA)",
+          "cut-3-5": "Two ranges split at 3.5: 0–3.5 and 3.5–4 (below and above a 3.5 GPA)"
+        },
+        "default": "whole"
+      },
+      "scope": {
+        "label": "Advisees counted",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every advisee, whenever the request does not narrow who is counted",
+          "flagged": "Only advisees with at least one risk flag such as holds, low credits or conflicts"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "give me a pie chart of the amount of students with gpa's between 0-2 and 2-4",
+      "userId": "okafor",
+      "createdAt": "2026-09-27T00:06:54.828Z",
+      "runId": "b783e04a"
+    }
+  },
+  {
+    "id": "weekly-time-heatmap",
+    "title": "Classes across the week",
+    "description": "A heat map with Monday to Friday as columns and time frames (half-hour, one-hour, two-hour blocks or morning/afternoon/evening) as rows, each cell shaded and labelled with how many courses or sections meet then, optionally limited to CS courses, remaining requirements or sections with open seats. Selecting a cell lists its courses, and selecting a course opens it in course detail.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "student"
+    ],
+    "props": {
+      "bins": {
+        "label": "Time frames",
+        "atlas": "chart.scale",
+        "options": {
+          "hour": "One row per hour of the day, such as 9–10 AM and 10–11 AM",
+          "half-hour": "One row per half hour, such as 9:00–9:30 and 9:30–10:00, for the finest detail",
+          "two-hour": "One row per two-hour block, such as 8–10 AM and 10 AM–12 PM",
+          "period": "Three rows: morning (before noon), afternoon (noon to 5 PM) and evening (5 PM or later)"
+        },
+        "default": "hour"
+      },
+      "count": {
+        "label": "What is counted",
+        "atlas": "chart.channels",
+        "options": {
+          "courses": "Distinct courses with at least one section meeting in each day and time frame",
+          "sections": "Individual sections meeting in each day and time frame"
+        },
+        "default": "courses"
+      },
+      "scope": {
+        "label": "Courses included",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every course in this term's schedule",
+          "cs": "Only computer science courses",
+          "remaining": "Only courses that satisfy the person's unmet degree requirements",
+          "open": "Only sections that still have open seats, leaving out full sections"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "Show me a heat map of how many courses are in each time frame during the week.",
+      "userId": "sam",
+      "createdAt": "2026-09-27T00:11:45.100Z",
+      "runId": "463b5730"
+    }
+  },
+  {
+    "id": "start-time-split-chart",
+    "title": "Classes by start-time split",
+    "description": "A pie, donut or bar chart of how many sections start on each side of a start-time split, such as AM (before noon) versus PM (noon or later), before or after 10 AM, 2 PM or 5 PM, or three or four time ranges, for the whole schedule, CS courses, remaining requirements, open sections or the person's planned classes. Buttons above the chart switch between pie, donut and bars.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "student"
+    ],
+    "props": {
+      "split": {
+        "label": "Start-time split",
+        "atlas": "chart.scale",
+        "options": {
+          "am-pm": "Two groups: AM classes starting before noon and PM classes starting at noon or later",
+          "three-periods": "Three groups: morning (before noon), afternoon (noon to 5 PM) and evening (5 PM or later)",
+          "four-ranges": "Four groups: before 10 AM, 10 AM to noon, noon to 3 PM, and 3 PM or later",
+          "cutoff-10am": "Two groups: classes starting before 10 AM and classes starting at 10 AM or later",
+          "cutoff-2pm": "Two groups: classes starting before 2 PM and classes starting at 2 PM or later",
+          "cutoff-5pm": "Two groups: classes starting before 5 PM and classes starting at 5 PM or later"
+        },
+        "default": "am-pm"
+      },
+      "markType": {
+        "label": "Initial chart type",
+        "atlas": "chart.markType",
+        "options": {
+          "pie": "Opens as a pie chart of shares; the person can switch to donut or bars with the buttons",
+          "donut": "Opens as a donut chart with the total in the centre; the person can switch to pie or bars",
+          "bars": "Opens as horizontal bars comparing exact counts; the person can switch to pie or donut"
+        },
+        "default": "pie"
+      },
+      "scope": {
+        "label": "Classes included",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every section in this term's schedule",
+          "planned": "Only the sections the person has planned this term",
+          "cs": "Only computer science sections",
+          "remaining": "Only sections of courses that satisfy the person's unmet degree requirements",
+          "open": "Only sections that still have open seats, leaving out full sections"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "give me a view where i can switch betwen pie charts and bar charts for am and pm classes",
+      "userId": "maya",
+      "createdAt": "2026-09-27T08:33:00.379Z",
+      "runId": "d10c0f1d"
+    }
+  },
+  {
+    "id": "grade-time-scatter",
+    "title": "A-grade distribution by class time",
+    "description": "A scatter plot showing the percentage of students who earned an A in each course versus the time of day that course starts, revealing whether morning, afternoon or evening sections correlate with higher grades.",
+    "atlas": "chart",
+    "source": "generated",
+    "roles": [
+      "student"
+    ],
+    "props": {
+      "markType": {
+        "label": "Mark type",
+        "atlas": "chart.markType",
+        "options": {
+          "points": "Scatter points, one per course, showing the spread of A-grade rates across start times",
+          "bubble": "Bubble chart where point size represents course enrollment, to see if popularity correlates with grades",
+          "trend": "Scatter points with a trend line to see the overall pattern of grades versus start time"
+        },
+        "default": "points"
+      },
+      "scope": {
+        "label": "Courses included",
+        "atlas": "chart.faceting",
+        "options": {
+          "all": "Every course in this term's schedule",
+          "cs": "Only computer science courses",
+          "remaining": "Only courses that satisfy the person's unmet degree requirements",
+          "open": "Only sections that still have open seats"
+        },
+        "default": "all"
+      }
+    },
+    "origin": {
+      "request": "give me a scatter plot of percentage of students with an A in the class vs time of day",
+      "userId": "maya",
+      "createdAt": "2026-09-27T08:35:34.628Z",
+      "runId": "777e5933"
+    }
+  }
+]

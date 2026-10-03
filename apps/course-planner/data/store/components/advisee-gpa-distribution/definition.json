@@ -1,0 +1,58 @@
+{
+  "id": "advisee-gpa-distribution",
+  "version": 1,
+  "title": "Advisee GPA distribution",
+  "description": "A pie, donut or bar chart of how many of the advisor's advisees fall into each GPA range (four one-point ranges, eight half-point ranges, two halves 0–2 and 2–4, or above and below a 2.5, 3.0 or 3.5 cut-off), with counts and shares. Selecting a range lists those advisees with their GPAs, and selecting a name opens that advisee.",
+  "audiences": [
+    "advisor"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "markType": {
+      "kind": "choice",
+      "label": "Chart type",
+      "options": {
+        "pie": "A pie chart, when the request asks for a pie chart or for shares of the whole",
+        "donut": "A donut chart with the total in the centre, when the request asks for a donut or ring chart",
+        "bars": "Horizontal bars, when the request asks for a bar chart, histogram, or to compare counts precisely"
+      },
+      "default": "pie",
+      "catalog": "chart.markType"
+    },
+    "bins": {
+      "kind": "choice",
+      "label": "GPA ranges",
+      "options": {
+        "whole": "Four one-point ranges: 0–1, 1–2, 2–3 and 3–4",
+        "half": "Eight half-point ranges: 0–0.5, 0.5–1, 1–1.5, 1.5–2, 2–2.5, 2.5–3, 3–3.5 and 3.5–4",
+        "two": "Two ranges split at 2.0: 0–2 and 2–4 (below and above a 2.0 GPA)",
+        "cut-2-5": "Two ranges split at 2.5: 0–2.5 and 2.5–4 (below and above a 2.5 GPA)",
+        "cut-3": "Two ranges split at 3.0: 0–3 and 3–4 (below and above a 3.0 GPA)",
+        "cut-3-5": "Two ranges split at 3.5: 0–3.5 and 3.5–4 (below and above a 3.5 GPA)"
+      },
+      "default": "whole",
+      "catalog": "chart.scale"
+    },
+    "scope": {
+      "kind": "choice",
+      "label": "Advisees counted",
+      "options": {
+        "all": "Every advisee, whenever the request does not narrow who is counted",
+        "flagged": "Only advisees with at least one risk flag such as holds, low credits or conflicts"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    }
+  },
+  "origin": {
+    "request": "give me a pie chart of the amount of students with gpa's between 0-2 and 2-4",
+    "userId": "okafor",
+    "createdAt": "2026-09-27T00:06:54.828Z",
+    "runId": "b783e04a"
+  },
+  "artifact": {
+    "hash": "35737984ad38b90d"
+  }
+}

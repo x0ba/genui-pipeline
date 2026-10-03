@@ -1,0 +1,54 @@
+{
+  "id": "advisee-meeting-heatmap",
+  "version": 1,
+  "title": "When advisees are in class",
+  "description": "Heatmap of the week, weekdays across and time of day down, where each cell's shade shows how many of the advisor's advisees have a planned class meeting then. Selecting a cell lists those advisees and their classes, and selecting a name opens that advisee.",
+  "audiences": [
+    "advisor"
+  ],
+  "catalog": "chart",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "scope": {
+      "kind": "choice",
+      "label": "Advisees and classes counted",
+      "options": {
+        "all": "Every advisee's planned classes",
+        "flagged": "Only advisees with risk flags such as holds, low credits or conflicts",
+        "cs": "Only planned computer science classes, to see when the CS cohort is busy"
+      },
+      "default": "all",
+      "catalog": "chart.faceting"
+    },
+    "binSize": {
+      "kind": "choice",
+      "label": "Time resolution",
+      "options": {
+        "hour": "One row per hour, for an at-a-glance view of the week",
+        "half-hour": "One row per 30 minutes, to find an exact free slot for a meeting or advising session"
+      },
+      "default": "hour",
+      "catalog": "chart.scale"
+    },
+    "annotation": {
+      "kind": "choice",
+      "label": "Cell labels",
+      "options": {
+        "counts": "The number of advisees in class printed in every busy cell",
+        "peaks": "Only the three busiest times outlined and labelled, to spot peaks quickly"
+      },
+      "default": "counts",
+      "catalog": "chart.annotation"
+    }
+  },
+  "origin": {
+    "request": "Show a heatmap of when my advisees' planned classes meet across the week",
+    "userId": "okafor",
+    "createdAt": "2026-09-26T21:31:23.609Z",
+    "runId": "e3c050b8"
+  },
+  "artifact": {
+    "hash": "d7923d82b2a957a6"
+  }
+}

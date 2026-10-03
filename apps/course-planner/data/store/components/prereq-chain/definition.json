@@ -1,0 +1,55 @@
+{
+  "id": "prereq-chain",
+  "version": 1,
+  "title": "Prerequisite chain to the capstone",
+  "description": "A tree rooted at each capstone course that branches into its prerequisites, and their prerequisites, back to courses already completed, marking each course as completed, planned, ready to take or still blocked, with a summary of the longest unfinished chain. Selecting a course opens it in course detail.",
+  "audiences": [
+    "student",
+    "advisor"
+  ],
+  "catalog": "tree-view",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "content": {
+      "kind": "choice",
+      "label": "Node content",
+      "options": {
+        "status": "Each course with whether it is completed, planned, ready to take, or which prerequisites it still needs",
+        "seats": "Status plus this term's sections, open seats and waitlist for courses not yet taken, to spot full or waitlisted courses on the path"
+      },
+      "default": "status",
+      "catalog": "tree-view.content"
+    },
+    "expandBy": {
+      "kind": "choice",
+      "label": "Expanded branches",
+      "options": {
+        "remaining": "Completed courses collapsed so only the unfinished part of each chain is open",
+        "all": "Every prerequisite branch expanded back to the first courses taken, to see the whole chain from completed courses to the capstone",
+        "path": "Only the longest unfinished chain to the capstone expanded, to see the critical path that sets the earliest graduation term"
+      },
+      "default": "remaining",
+      "catalog": "tree-view.expandBy"
+    },
+    "density": {
+      "kind": "choice",
+      "label": "Density",
+      "options": {
+        "compact": "One short line per course, to see a deep chain at once",
+        "comfortable": "Course title and status on separate lines with larger tap targets, for phones"
+      },
+      "default": "comfortable",
+      "catalog": "tree-view.density"
+    }
+  },
+  "origin": {
+    "request": "Show how prerequisites chain from what I've taken to the capstone",
+    "userId": "maya",
+    "createdAt": "2026-09-26T17:24:29.683Z",
+    "runId": "7a6d0ab6"
+  },
+  "artifact": {
+    "hash": "1a3955edafc1cb48"
+  }
+}

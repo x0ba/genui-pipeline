@@ -1,0 +1,57 @@
+{
+  "id": "course-field-time-finder",
+  "version": 1,
+  "title": "Courses by field and start time",
+  "description": "A table of this term's courses filtered by field (STEM or non-STEM, by department) and by when their sections start (morning, after noon, or evening), listing each course's matching section times and open seats. Selecting a course opens it in course detail.",
+  "audiences": [
+    "student",
+    "advisor"
+  ],
+  "catalog": "faceted-search",
+  "source": "generated",
+  "scope": "shared",
+  "props": {
+    "field": {
+      "kind": "choice",
+      "label": "Field",
+      "options": {
+        "any": "Courses in every department, when the request does not mention STEM or non-STEM",
+        "stem": "Only STEM courses: computer science, mathematics, statistics, the natural sciences and engineering",
+        "non-stem": "Only non-STEM courses, such as humanities, arts, social sciences, languages and business"
+      },
+      "default": "any",
+      "catalog": "faceted-search.types"
+    },
+    "startTime": {
+      "kind": "choice",
+      "label": "Start time",
+      "options": {
+        "any": "Sections at any time of day",
+        "morning": "Only sections that start before noon",
+        "after-noon": "Only sections that start at noon or later, afternoon and evening together, for requests like after noon, after lunch or in the afternoon or later",
+        "evening": "Only sections that start at 5pm or later"
+      },
+      "default": "any",
+      "catalog": "faceted-search.facetSet"
+    },
+    "seats": {
+      "kind": "choice",
+      "label": "Seat availability",
+      "options": {
+        "any": "Every matching section, full or not, whenever the request does not ask about availability",
+        "open": "Only sections that still have open seats, when the request asks for courses that are open or not full"
+      },
+      "default": "any",
+      "catalog": "faceted-search.facetSet"
+    }
+  },
+  "origin": {
+    "request": "Show me the courses that are after noon that are non-stem.",
+    "userId": "maya",
+    "createdAt": "2026-09-26T23:36:11.242Z",
+    "runId": "8b5e7c84"
+  },
+  "artifact": {
+    "hash": "b75ab8e172943e2d"
+  }
+}

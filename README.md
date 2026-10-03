@@ -10,7 +10,7 @@ The demo app is a university course planner with three people to switch between:
 - **Dr. Adaeze Okafor**, an advisor with 38 advisees. She works at a desktop and acts on the roster in bulk.
 - **Sam Rivera**, a first-year student whose needs match the default app.
 
-## Interesting Observations
+## Observations
 
 - Despite the UI being spec-driven with the intent of making sure nothing ever looks "wrong", things can still look "wrong." For example, the spec never makes sure UI elements have enough contrast with each other to be legible, which seems to also be something LLMs continuoully struggle with. As always, the solution was to add verification, a little like the verification the pipeline does with UI specs. Whenever a component is installed, it is rendered in a headless Chrome with the app's real stylesheets, and a contrast audit is run. The component is rejected if any text is below 4.5:1 (3:1 for large text), overlaps other text, renders under 10px, or has a fill the stylesheet overrides.
 
@@ -26,6 +26,13 @@ The demo app is a university course planner with three people to switch between:
 </table>
 
 - Jev treats a close match as an exact one. I asked for a pie chart of students with GPAs from 0–1, 1–2, 2–3 and 3–4, and Claude built that chart. When I then asked for GPAs from 0–2 and 2–4, Jev showed the same four-range chart again. Every setting Jev picks has to be one of the options the spec lists, so it rounded my request to the nearest one, and the one check for missing features looked at the app as a whole, where a GPA pie chart already existed. The fix was to ask Jev, for each setting of the chart it picks, whether the request names a value that none of the options gives. If it does, Jev flags the request, and Claude adds the missing option to the existing component instead of building a duplicate.
+
+## Limitations (for now)
+
+- *The UI is malleable, not dynamic.* The library can only (for now) handle requests for interface patterns that already exist in the [Pattern Atlas](data/atlas.json) catalog. The catalog is thorough and covers all common interface patterns but, as a catalog, is by definition limited.
+- In a similar vein to the above bullet, the layout for the interface elements is very limited. Every view picks one of three layouts (`main-aside`, `stack`, or `columns`), and every slot goes in one of three regions (`top`, `main`, or `aside`). Claude can't size components, place them freely, or invent a new arrangement, so a person who needs something like a dashboard grid or a floating panel gets the closest of the three.
+- Jev's choices are entirely driven by the plain-language descriptions of each option, so well-worded descriptions are a must.
+  - This is slightly jank because plain-language is never deterministic.
 
 ## How it works
 
